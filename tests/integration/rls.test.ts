@@ -73,8 +73,11 @@ describe('RLS isolation', () => {
 
   it('anon client cannot read or write anything', async () => {
     const anon = createClient(URL, ANON, {auth: {persistSession: false}});
-    const {data} = await anon.from('feedback').select('id');
-    expect(data).toHaveLength(0);
+    const {data, error: readError} = await anon.from('feedback').select('id');
+    // anon has no table grant at all, so this is a permission-denied error (data null)
+    // rather than an RLS-filtered empty array — either way, no rows are ever readable.
+    expect(data ?? []).toHaveLength(0);
+    expect(readError).not.toBeNull();
     const {error} = await anon.from('tap_events').insert({table_id: crypto.randomUUID(), venue_id: venueId});
     expect(error).not.toBeNull();
   });

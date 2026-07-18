@@ -56,13 +56,26 @@ create index feedback_venue_created_idx on public.feedback (venue_id, created_at
 -- get no privileges on tables they didn't create unless granted explicitly. Hosted
 -- Supabase projects seed this automatically; a bare `supabase init` local project does
 -- not, so it must be done here for the RLS policies below to ever be reachable.
-grant usage on schema public to postgres, anon, authenticated, service_role;
-grant all on all tables in schema public to postgres, anon, authenticated, service_role;
-grant all on all routines in schema public to postgres, anon, authenticated, service_role;
-grant all on all sequences in schema public to postgres, anon, authenticated, service_role;
-alter default privileges in schema public grant all on tables to postgres, anon, authenticated, service_role;
-alter default privileges in schema public grant all on routines to postgres, anon, authenticated, service_role;
-alter default privileges in schema public grant all on sequences to postgres, anon, authenticated, service_role;
+-- Least privilege: authenticated gets only the four RLS-governed DML commands (RLS
+-- policies below then filter which rows are visible/writable); anon gets schema USAGE
+-- only — guest writes go through the service-role client exclusively, so anon needs
+-- zero table or routine privileges; service_role keeps full access as the trusted,
+-- RLS-bypassing role this block exists for. postgres is omitted — it owns the tables.
+--
+-- The local Postgres image also pre-seeds a default ACL (for role postgres, the role
+-- migrations run as) that auto-grants TRUNCATE/REFERENCES/TRIGGER/MAINTAIN to anon and
+-- authenticated on every new table. GRANT only adds privileges, so that inherited grant
+-- must be explicitly revoked first, on both the tables just created and future ones.
+revoke all on all tables in schema public from anon, authenticated;
+alter default privileges in schema public revoke all on tables from anon, authenticated;
+
+grant usage on schema public to anon, authenticated, service_role;
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant all on all tables in schema public to service_role;
+grant all on all sequences in schema public to service_role;
+alter default privileges in schema public grant select, insert, update, delete on tables to authenticated;
+alter default privileges in schema public grant all on tables to service_role;
+alter default privileges in schema public grant all on sequences to service_role;
 
 -- === Signup trigger ===
 create function public.handle_new_user()
