@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- All user-facing copy is German and lives in `messages/de.json` (next-intl). No hardcoded UI strings in components.
+- All user-facing copy is German and lives in `messages/de.json` (next-intl). No hardcoded UI strings in components. Exception: the long-form legal document content of `/impressum` and `/datenschutz` is page content, not UI chrome — it stays inline in those two files.
 - Guest pages (`/f/...`) must ship **no client-side JavaScript**: server components, `<a>` links, and `<form action={serverAction}>` only. Dashboard may use small client components.
 - Never store IP addresses, user agents, or any fingerprint for guests. `tap_events` columns are exactly: id, table_id, venue_id, outcome, created_at.
 - No cookies on guest pages; owner side uses only Supabase auth cookies.
@@ -1604,6 +1604,7 @@ import Link from 'next/link';
 export default async function LandingPage() {
   const t = await getTranslations('landing');
   const tc = await getTranslations('common');
+  const tg = await getTranslations('guest');
   return (
     <main className="mx-auto flex min-h-dvh max-w-2xl flex-col px-5 py-8">
       <header className="flex items-center justify-between">
@@ -1617,8 +1618,8 @@ export default async function LandingPage() {
         <p className="mt-4 text-lg text-muted">{t('sub')}</p>
       </section>
       <footer className="flex justify-center gap-6 text-xs text-muted">
-        <Link href="/datenschutz">Datenschutz</Link>
-        <Link href="/impressum">Impressum</Link>
+        <Link href="/datenschutz">{tg('footerPrivacy')}</Link>
+        <Link href="/impressum">{tg('footerImpressum')}</Link>
       </footer>
     </main>
   );
