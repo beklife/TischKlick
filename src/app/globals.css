@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-cream: #faf6f0;
+  --color-ink: #2b2620;
+  --color-terra: #c05e33;
+  --color-terra-dark: #9c4a26;
+  --color-sage: #6b7f5e;
+  --color-card: #ffffff;
+  --color-muted: #8a7f72;
+  --color-line: #e8e0d4;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}

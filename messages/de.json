@@ -1,0 +1,121 @@
+{
+  "common": {
+    "appName": "TischKlick",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "back": "Zurück",
+    "error": "Das hat leider nicht geklappt. Bitte versuchen Sie es noch einmal."
+  },
+  "guest": {
+    "question": "Wie war Ihr Besuch bei uns?",
+    "ratingHint": "Tippen Sie zum Bewerten auf einen Stern",
+    "starLabel": "{count} von 5 Sternen",
+    "invalidTitle": "Dieser Link ist leider nicht mehr aktiv",
+    "invalidBody": "Bitte wenden Sie sich an das Personal vor Ort.",
+    "googleTitle": "Danke, das freut uns sehr!",
+    "googleBody": "Würden Sie Ihre Erfahrung auf Google teilen? Das dauert nur eine Minute und hilft uns enorm.",
+    "googleButton": "Auf Google bewerten",
+    "feedbackTitle": "Das tut uns leid.",
+    "feedbackBody": "Was können wir besser machen? Ihr Feedback geht direkt und vertraulich an das Team.",
+    "categoriesLabel": "Was hat Ihnen nicht gefallen?",
+    "categories": {
+      "essen": "Essen",
+      "service": "Service",
+      "wartezeit": "Wartezeit",
+      "sauberkeit": "Sauberkeit",
+      "preis": "Preis"
+    },
+    "commentLabel": "Ihre Nachricht (optional)",
+    "commentPlaceholder": "Was können wir besser machen?",
+    "contactLabel": "Kontakt (optional) – nur falls Sie eine Antwort möchten",
+    "contactPlaceholder": "E-Mail oder Telefonnummer",
+    "submit": "Feedback senden",
+    "thanksTitle": "Vielen Dank für Ihr Feedback!",
+    "thanksBody": "Ihre Nachricht wurde direkt an {venue} übermittelt.",
+    "footerPrivacy": "Datenschutz",
+    "footerImpressum": "Impressum"
+  },
+  "auth": {
+    "loginTitle": "Anmelden",
+    "registerTitle": "Konto erstellen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "loginButton": "Anmelden",
+    "registerButton": "Registrieren",
+    "switchToRegister": "Noch kein Konto? Registrieren",
+    "switchToLogin": "Schon ein Konto? Anmelden",
+    "signOut": "Abmelden",
+    "invalidCredentials": "E-Mail oder Passwort ist falsch.",
+    "registerFailed": "Registrierung fehlgeschlagen. Ist die E-Mail schon vergeben?"
+  },
+  "nav": {
+    "feedback": "Feedback",
+    "tables": "Tische & Links",
+    "stats": "Statistik",
+    "settings": "Einstellungen"
+  },
+  "onboarding": {
+    "title": "Venue anlegen",
+    "nameLabel": "Name des Lokals",
+    "namePlaceholder": "z. B. Café Sonne",
+    "createButton": "Venue anlegen",
+    "googleTitle": "Google-Eintrag verbinden",
+    "googleHint": "Suchen Sie Ihr Lokal, damit zufriedene Gäste direkt zur Google-Bewertung gelangen.",
+    "searchPlaceholder": "Name und Stadt, z. B. Café Sonne Berlin",
+    "searchButton": "Suchen",
+    "selectButton": "Auswählen",
+    "noResults": "Keine Treffer. Versuchen Sie es mit Name und Stadt.",
+    "searchFailed": "Die Google-Suche ist gerade nicht erreichbar. Versuchen Sie es erneut oder fügen Sie den Link manuell ein.",
+    "manualTitle": "Oder Bewertungslink manuell einfügen",
+    "manualLabel": "Google-Bewertungslink",
+    "manualButton": "Link speichern",
+    "connected": "Google-Eintrag verbunden",
+    "testLink": "Testlink öffnen",
+    "toDashboard": "Zum Dashboard"
+  },
+  "inbox": {
+    "title": "Feedback",
+    "empty": "Noch kein Feedback eingegangen. Sobald ein Gast privates Feedback sendet, erscheint es hier.",
+    "unread": "Neu",
+    "table": "Tisch",
+    "anonymous": "Anonym",
+    "contactGiven": "Kontakt hinterlassen",
+    "deleteContact": "Kontaktdaten löschen",
+    "noComment": "Keine Nachricht"
+  },
+  "tables": {
+    "title": "Tische & Links",
+    "addLabel": "Neuen Tisch anlegen",
+    "addPlaceholder": "z. B. Tisch 1",
+    "addButton": "Hinzufügen",
+    "copy": "Link kopieren",
+    "copied": "Kopiert!",
+    "qrAlt": "QR-Code für {label}",
+    "qrHint": "Diese URL auf die NFC-Karte schreiben – der QR-Code ist der gedruckte Fallback.",
+    "empty": "Noch keine Tische. Legen Sie den ersten an."
+  },
+  "stats": {
+    "title": "Statistik",
+    "period": "Letzte 30 Tage",
+    "taps": "Aufrufe",
+    "google": "Google-Weiterleitungen",
+    "feedback": "Privates Feedback",
+    "conversion": "{percent} % der Aufrufe führten zu einer Aktion"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "nameLabel": "Name des Lokals",
+    "logoLabel": "Logo (PNG oder JPG, max. 2 MB)",
+    "logoButton": "Logo hochladen",
+    "googleTitle": "Google-Eintrag",
+    "venueLabel": "Venue",
+    "switchButton": "Wechseln",
+    "newVenue": "Neues Venue anlegen",
+    "saved": "Gespeichert"
+  },
+  "landing": {
+    "claim": "Mehr Google-Bewertungen. Kritik bleibt intern.",
+    "sub": "NFC-Karten auf dem Tisch – Gäste bewerten mit einem Tipp.",
+    "login": "Anmelden"
+  }
+}
