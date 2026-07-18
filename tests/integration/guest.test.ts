@@ -90,4 +90,33 @@ describe('guest data ops', () => {
     const {data: tap} = await admin.from('tap_events').select('outcome').eq('id', tapId).single();
     expect(tap!.outcome).toBe('private_feedback');
   });
+
+  it('submitFeedback with tapId null stores feedback and does not touch tap_events', async () => {
+    const {count: before} = await admin
+      .from('tap_events')
+      .select('id', {count: 'exact', head: true})
+      .eq('table_id', tableId);
+    await submitFeedback({
+      venueId,
+      tableId,
+      rating: 5,
+      categories: ['essen'],
+      comment: null,
+      contact: null,
+      tapId: null
+    });
+    const {data: fb} = await admin
+      .from('feedback')
+      .select('rating, categories, comment, contact')
+      .eq('venue_id', venueId)
+      .order('created_at', {ascending: false})
+      .limit(1)
+      .single();
+    expect(fb).toMatchObject({rating: 5, categories: ['essen'], comment: null, contact: null});
+    const {count: after} = await admin
+      .from('tap_events')
+      .select('id', {count: 'exact', head: true})
+      .eq('table_id', tableId);
+    expect(after).toBe(before);
+  });
 });

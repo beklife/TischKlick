@@ -17,11 +17,15 @@ export type GuestTable = {
 
 export async function getTableByCode(code: string): Promise<GuestTable | null> {
   const supabase = createSupabaseAdminClient();
-  const {data} = await supabase
+  const {data, error} = await supabase
     .from('tables')
     .select('id, code, label, venues (id, name, logo_url, google_place_id, google_review_url)')
     .eq('code', code)
     .maybeSingle();
+  // With .maybeSingle(), "no rows" is data: null, error: null — not an error.
+  // A real error here is a genuine DB/network failure and must not be swallowed
+  // as if the table code were simply invalid.
+  if (error) throw error;
   if (!data || !data.venues) return null;
   const v = data.venues as unknown as {
     id: string; name: string; logo_url: string | null;
@@ -58,7 +62,15 @@ export async function setTapOutcome(
 ): Promise<void> {
   const supabase = createSupabaseAdminClient();
   // Only upgrade rows still at 'opened' so double submits can't rewrite history.
-  await supabase.from('tap_events').update({outcome}).eq('id', tapId).eq('outcome', 'opened');
+  const {error} = await supabase
+    .from('tap_events')
+    .update({outcome})
+    .eq('id', tapId)
+    .eq('outcome', 'opened');
+  // Outcome tracking is analytics, not the guest flow: never throw here. In particular,
+  // submitFeedback calls this after the feedback row is already saved, so throwing would
+  // push the guest into resubmitting and creating duplicate feedback.
+  if (error) console.error('setTapOutcome failed:', error);
 }
 
 export async function submitFeedback(input: {
