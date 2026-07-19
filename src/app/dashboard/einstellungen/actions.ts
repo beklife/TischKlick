@@ -3,6 +3,7 @@
 import {redirect} from 'next/navigation';
 import {createSupabaseServerClient} from '@/lib/supabase/server';
 import {createSupabaseAdminClient} from '@/lib/supabase/admin';
+import {sniffImageType} from '@/lib/images';
 
 export async function updateVenueName(formData: FormData) {
   const venueId = String(formData.get('venueId') ?? '');
@@ -27,6 +28,12 @@ export async function uploadLogo(formData: FormData) {
   const ext = ALLOWED_LOGO_TYPES[file.type];
   if (!ext) redirect('/dashboard/einstellungen');
 
+  // Never trust the client-declared MIME type alone — verify the actual file
+  // bytes match the declared type before it ever reaches storage.
+  const head = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+  const sniffed = sniffImageType(head);
+  if (sniffed !== ext) redirect('/dashboard/einstellungen');
+
   // Ownership check with the user client (RLS) BEFORE touching storage with service role.
   const supabase = await createSupabaseServerClient();
   const {data: venue} = await supabase.from('venues').select('id').eq('id', venueId).maybeSingle();
@@ -37,7 +44,10 @@ export async function uploadLogo(formData: FormData) {
   const {error} = await admin.storage.from('logos').upload(path, file, {upsert: true, contentType: file.type});
   if (!error) {
     const {data: pub} = admin.storage.from('logos').getPublicUrl(path);
-    const {error: updateError} = await supabase.from('venues').update({logo_url: pub.publicUrl}).eq('id', venueId);
+    // Cache-bust: a re-upload reuses the same storage path, so append a
+    // version query param to force stale CDN/browser caches to refetch.
+    const logoUrl = `${pub.publicUrl}?v=${Date.now()}`;
+    const {error: updateError} = await supabase.from('venues').update({logo_url: logoUrl}).eq('id', venueId);
     if (updateError) console.error('uploadLogo failed:', updateError);
   }
   redirect('/dashboard/einstellungen?gespeichert=1');
