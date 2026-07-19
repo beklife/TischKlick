@@ -11,6 +11,11 @@ export async function switchVenue(formData: FormData) {
   // the signed-in owner's own RLS-scoped venues, so a tampered value just
   // falls back to the owner's first venue — it can never select another
   // owner's data.
-  cookieStore.set(ACTIVE_VENUE_COOKIE, venueId, {httpOnly: true, sameSite: 'lax', path: '/'});
+  cookieStore.set(ACTIVE_VENUE_COOKIE, venueId, {
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/',
+    secure: process.env.NODE_ENV === 'production',
+  });
   redirect('/dashboard');
 }

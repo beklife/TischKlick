@@ -1,6 +1,8 @@
 import {getTranslations} from 'next-intl/server';
 import Link from 'next/link';
 
+export const metadata = {robots: {index: false, follow: false}};
+
 export default async function GuestLayout({children}: {children: React.ReactNode}) {
   const t = await getTranslations('guest');
   return (

@@ -16,6 +16,10 @@ describe('safeBackPath', () => {
     expect(safeBackPath('//evil.example', '/fallback')).toBe('/fallback');
   });
 
+  it('rejects a backslash-prefixed URL', () => {
+    expect(safeBackPath('/\\evil.example', '/x')).toBe('/x');
+  });
+
   it('rejects an empty string', () => {
     expect(safeBackPath('', '/fallback')).toBe('/fallback');
   });
