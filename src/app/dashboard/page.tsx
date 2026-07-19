@@ -32,12 +32,17 @@ export default async function InboxPage() {
               <li key={fb.id}>
                 <Link
                   href={`/dashboard/feedback/${fb.id}`}
+                  // The detail page marks feedback read during render, so viewport/hover
+                  // prefetch must never fire that request — prefetch is disabled here.
+                  prefetch={false}
                   className="block rounded-2xl bg-card p-4 ring-1 ring-line hover:ring-terra"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-terra">
-                      {'★'.repeat(fb.rating)}
-                      <span className="text-line">{'★'.repeat(5 - fb.rating)}</span>
+                    <span className="text-terra" aria-label={tg('starLabel', {count: fb.rating})}>
+                      <span aria-hidden="true">
+                        {'★'.repeat(fb.rating)}
+                        <span className="text-line">{'★'.repeat(5 - fb.rating)}</span>
+                      </span>
                     </span>
                     <span className="flex items-center gap-2 text-xs text-muted">
                       {!fb.read_at ? (

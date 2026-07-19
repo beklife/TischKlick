@@ -30,9 +30,11 @@ export default async function FeedbackDetailPage({params}: {params: Promise<{id:
       <Link href="/dashboard" className="text-sm text-muted underline">← {tc('back')}</Link>
       <div className="mt-4 rounded-2xl bg-card p-6 ring-1 ring-line">
         <div className="flex items-center justify-between">
-          <span className="text-xl text-terra">
-            {'★'.repeat(fb.rating)}
-            <span className="text-line">{'★'.repeat(5 - fb.rating)}</span>
+          <span className="text-xl text-terra" aria-label={tg('starLabel', {count: fb.rating})}>
+            <span aria-hidden="true">
+              {'★'.repeat(fb.rating)}
+              <span className="text-line">{'★'.repeat(5 - fb.rating)}</span>
+            </span>
           </span>
           <span className="text-sm text-muted">
             {table ? `${t('table')} ${table.label} · ` : ''}

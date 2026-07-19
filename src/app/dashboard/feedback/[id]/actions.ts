@@ -7,6 +7,7 @@ export async function deleteContact(formData: FormData) {
   const id = String(formData.get('id') ?? '');
   const supabase = await createSupabaseServerClient();
   // RLS: only the owning venue's owner can update.
-  await supabase.from('feedback').update({contact: null}).eq('id', id);
+  const {error} = await supabase.from('feedback').update({contact: null}).eq('id', id);
+  if (error) console.error('deleteContact failed:', error);
   redirect(`/dashboard/feedback/${id}`);
 }

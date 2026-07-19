@@ -1,6 +1,5 @@
 import {getTranslations} from 'next-intl/server';
 import Link from 'next/link';
-import {redirect} from 'next/navigation';
 import {getActiveVenue} from '@/lib/venues';
 import {signOut} from '@/app/login/actions';
 
