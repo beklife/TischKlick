@@ -78,7 +78,7 @@ export async function getVenueStats(supabase: SupabaseClient, venueId: string): 
   async function countOutcome(outcome?: 'google_redirect' | 'private_feedback'): Promise<number> {
     let query = supabase
       .from('tap_events')
-      .select('id', {count: 'exact'})
+      .select('id', {count: 'exact', head: true})
       .eq('venue_id', venueId)
       .gte('created_at', since);
     if (outcome) query = query.eq('outcome', outcome);
