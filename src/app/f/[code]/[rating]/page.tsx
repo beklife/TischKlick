@@ -1,8 +1,10 @@
+import {redirect} from 'next/navigation';
 import {getTranslations} from 'next-intl/server';
-import {getTableByCode, GUEST_CATEGORIES} from '@/lib/guest';
+import {cleanTapId, getTableByCode, setTapOutcome, GUEST_CATEGORIES} from '@/lib/guest';
+import {googleReviewUrl} from '@/lib/google';
 import {ratingBranch} from '@/lib/rating';
 import {InvalidLink} from '../../invalid-link';
-import {goToGoogle, sendFeedback} from '../actions';
+import {sendFeedback} from '../actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,23 +30,13 @@ export default async function BranchPage({params, searchParams}: Props) {
   }
 
   if (branch === 'google') {
-    return (
-      <div className="text-center">
-        <p className="text-4xl">🎉</p>
-        <h1 className="mt-4 text-2xl font-semibold">{t('googleTitle')}</h1>
-        <p className="mt-3 text-muted">{t('googleBody')}</p>
-        <form action={goToGoogle} className="mt-8">
-          <input type="hidden" name="code" value={code} />
-          <input type="hidden" name="tapId" value={sp.t ?? ''} />
-          <button
-            type="submit"
-            className="w-full rounded-2xl bg-terra px-6 py-4 text-lg font-semibold text-white shadow active:bg-terra-dark"
-          >
-            {t('googleButton')}
-          </button>
-        </form>
-      </div>
-    );
+    const tapId = cleanTapId(sp.t);
+    const url =
+      table.venue.googleReviewUrl ??
+      (table.venue.googlePlaceId ? googleReviewUrl(table.venue.googlePlaceId) : null);
+    if (!url) redirect(`/f/${code}/danke`);
+    if (tapId) await setTapOutcome(tapId, 'google_redirect');
+    redirect(url);
   }
 
   const preCategories = new Set((sp.cat ?? '').split(',').filter(Boolean));

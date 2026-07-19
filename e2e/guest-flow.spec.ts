@@ -49,12 +49,16 @@ test('negative path: 2 stars -> private feedback -> danke', async ({page}) => {
   expect(fb).toMatchObject({rating: 2, categories: ['service']});
 });
 
-test('positive path: 5 stars -> google interstitial with redirect form', async ({page}) => {
+test('positive path: 5 stars -> redirected straight to google review page', async ({page}) => {
   await page.goto(`/f/${code}`);
+  // Capture our own server's redirect response before the browser follows it out to
+  // google.com — asserts the server-side redirect, without depending on real network.
+  const redirectPromise = page.waitForResponse(
+    (res) => res.url().includes(`/f/${code}/5`) && [301, 302, 307, 308].includes(res.status())
+  );
   await page.getByRole('link', {name: '5 von 5 Sternen'}).click();
-  await expect(page.getByText('Danke, das freut uns sehr!')).toBeVisible();
-  await expect(page.getByRole('button', {name: 'Auf Google bewerten'})).toBeVisible();
-  // Not clicking through: it would leave for google.com. The action is covered by integration tests.
+  const redirect = await redirectPromise;
+  expect(redirect.headers()['location']).toBe('https://search.google.com/local/writereview?placeid=ChIJe2e');
 });
 
 test('unknown code shows friendly german error', async ({page}) => {

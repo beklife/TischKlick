@@ -2,6 +2,12 @@ import {createSupabaseAdminClient} from '@/lib/supabase/admin';
 
 export const GUEST_CATEGORIES = ['essen', 'service', 'wartezeit', 'sauberkeit', 'preis'] as const;
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export function cleanTapId(value: unknown): string | null {
+  return typeof value === 'string' && UUID_RE.test(value) ? value : null;
+}
+
 export type GuestTable = {
   id: string;
   code: string;

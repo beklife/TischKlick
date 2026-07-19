@@ -1,28 +1,8 @@
 'use server';
 
 import {redirect} from 'next/navigation';
-import {getTableByCode, setTapOutcome, submitFeedback, GUEST_CATEGORIES} from '@/lib/guest';
+import {cleanTapId, getTableByCode, submitFeedback, GUEST_CATEGORIES} from '@/lib/guest';
 import {ratingBranch} from '@/lib/rating';
-import {googleReviewUrl} from '@/lib/google';
-
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-function cleanTapId(value: FormDataEntryValue | null): string | null {
-  return typeof value === 'string' && UUID_RE.test(value) ? value : null;
-}
-
-export async function goToGoogle(formData: FormData) {
-  const code = String(formData.get('code') ?? '');
-  const tapId = cleanTapId(formData.get('tapId'));
-  const table = await getTableByCode(code);
-  if (!table) redirect('/f/ungueltig');
-  const url =
-    table.venue.googleReviewUrl ??
-    (table.venue.googlePlaceId ? googleReviewUrl(table.venue.googlePlaceId) : null);
-  if (!url) redirect(`/f/${code}/danke`);
-  if (tapId) await setTapOutcome(tapId, 'google_redirect');
-  redirect(url);
-}
 
 export async function sendFeedback(formData: FormData) {
   const code = String(formData.get('code') ?? '');
