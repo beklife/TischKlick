@@ -11,6 +11,20 @@ export function googleReviewUrl(placeId: string): string {
   return `https://search.google.com/local/writereview?placeid=${encodeURIComponent(placeId)}`;
 }
 
+const ALLOWED_REVIEW_HOSTS = ['g.page', 'goo.gl', 'google.com', 'google.de'];
+
+export function isAllowedGoogleReviewUrl(raw: string): boolean {
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    return false;
+  }
+  if (url.protocol !== 'https:') return false;
+  const host = url.hostname.toLowerCase();
+  return ALLOWED_REVIEW_HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
+}
+
 type PlacesResponse = {
   places?: Array<{
     id: string;

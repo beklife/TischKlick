@@ -60,6 +60,12 @@ export async function createVenueWithFirstTable(
   const {error: tableError} = await supabase
     .from('tables')
     .insert({venue_id: venue.id, label: 'Tisch 1', code: generateTableCode()});
-  if (tableError) throw tableError;
+  if (tableError) {
+    // Cleanup-on-failure: without this, a failed table insert would leave an
+    // orphaned, table-less venue behind (createVenueWithFirstTable is meant
+    // to be atomic — a venue is never valid without its first table).
+    await supabase.from('venues').delete().eq('id', venue.id);
+    throw tableError;
+  }
   return venue.id;
 }

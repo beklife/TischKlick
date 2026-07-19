@@ -3,7 +3,8 @@
 import {redirect} from 'next/navigation';
 import {createSupabaseServerClient} from '@/lib/supabase/server';
 import {createVenueWithFirstTable} from '@/lib/venues';
-import {googleReviewUrl} from '@/lib/google';
+import {googleReviewUrl, isAllowedGoogleReviewUrl} from '@/lib/google';
+import {safeBackPath} from '@/lib/urls';
 
 export async function createVenue(formData: FormData) {
   const name = String(formData.get('name') ?? '').trim().slice(0, 120);
@@ -19,7 +20,7 @@ export async function createVenue(formData: FormData) {
 export async function selectPlace(formData: FormData) {
   const venueId = String(formData.get('venueId') ?? '');
   const placeId = String(formData.get('placeId') ?? '');
-  const backPath = String(formData.get('backPath') ?? `/dashboard/onboarding?venue=${venueId}`);
+  const backPath = safeBackPath(formData.get('backPath'), `/dashboard/onboarding?venue=${venueId}`);
   const supabase = await createSupabaseServerClient();
   // RLS: update only succeeds if the venue belongs to the signed-in owner.
   await supabase
@@ -32,14 +33,8 @@ export async function selectPlace(formData: FormData) {
 export async function saveManualUrl(formData: FormData) {
   const venueId = String(formData.get('venueId') ?? '');
   const url = String(formData.get('url') ?? '').trim();
-  const backPath = String(formData.get('backPath') ?? `/dashboard/onboarding?venue=${venueId}`);
-  let parsed: URL;
-  try {
-    parsed = new URL(url);
-  } catch {
-    redirect(backPath);
-  }
-  if (parsed.protocol !== 'https:' || !/(^|\.)google\.[a-z.]+$/.test(parsed.hostname)) {
+  const backPath = safeBackPath(formData.get('backPath'), `/dashboard/onboarding?venue=${venueId}`);
+  if (!isAllowedGoogleReviewUrl(url)) {
     redirect(backPath);
   }
   const supabase = await createSupabaseServerClient();

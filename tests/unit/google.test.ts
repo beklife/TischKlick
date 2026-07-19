@@ -1,5 +1,5 @@
 import {describe, it, expect, vi, afterEach} from 'vitest';
-import {googleReviewUrl, searchPlaces, PlacesApiError} from '@/lib/google';
+import {googleReviewUrl, searchPlaces, PlacesApiError, isAllowedGoogleReviewUrl} from '@/lib/google';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -40,5 +40,29 @@ describe('searchPlaces', () => {
   it('throws PlacesApiError on non-OK response', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ok: false, status: 403, json: async () => ({})}));
     await expect(searchPlaces('x')).rejects.toBeInstanceOf(PlacesApiError);
+  });
+});
+
+describe('isAllowedGoogleReviewUrl', () => {
+  it('accepts a g.page review link', () => {
+    expect(isAllowedGoogleReviewUrl('https://g.page/r/abc/review')).toBe(true);
+  });
+  it('accepts a maps.app.goo.gl link (subdomain of goo.gl)', () => {
+    expect(isAllowedGoogleReviewUrl('https://maps.app.goo.gl/xyz')).toBe(true);
+  });
+  it('accepts the official writereview URL', () => {
+    expect(isAllowedGoogleReviewUrl('https://search.google.com/local/writereview?placeid=1')).toBe(true);
+  });
+  it('rejects non-https', () => {
+    expect(isAllowedGoogleReviewUrl('http://g.page/x')).toBe(false);
+  });
+  it('rejects a lookalike suffix-abuse domain', () => {
+    expect(isAllowedGoogleReviewUrl('https://google.evil.com/x')).toBe(false);
+  });
+  it('rejects an unrelated domain that merely contains "gpage"', () => {
+    expect(isAllowedGoogleReviewUrl('https://gpage.evil/x')).toBe(false);
+  });
+  it('rejects a non-URL string', () => {
+    expect(isAllowedGoogleReviewUrl('not-a-url')).toBe(false);
   });
 });
