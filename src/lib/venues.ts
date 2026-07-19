@@ -69,3 +69,33 @@ export async function createVenueWithFirstTable(
   }
   return venue.id;
 }
+
+export type VenueStats = {taps: number; google: number; feedback: number; conversionPercent: number};
+
+export async function getVenueStats(supabase: SupabaseClient, venueId: string): Promise<VenueStats> {
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+  async function countOutcome(outcome?: 'google_redirect' | 'private_feedback'): Promise<number> {
+    let query = supabase
+      .from('tap_events')
+      .select('id', {count: 'exact'})
+      .eq('venue_id', venueId)
+      .gte('created_at', since);
+    if (outcome) query = query.eq('outcome', outcome);
+    const {count} = await query;
+    return count ?? 0;
+  }
+
+  const [taps, google, feedback] = await Promise.all([
+    countOutcome(),
+    countOutcome('google_redirect'),
+    countOutcome('private_feedback')
+  ]);
+
+  return {
+    taps,
+    google,
+    feedback,
+    conversionPercent: taps === 0 ? 0 : Math.round(((google + feedback) / taps) * 100)
+  };
+}
