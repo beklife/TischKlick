@@ -15,7 +15,11 @@ describe('fitWithin', () => {
   });
 
   it('rounds to whole pixels and never returns zero', () => {
-    expect(fitWithin(3000, 3, 1200)).toEqual({width: 1200, height: 1});
+    expect(fitWithin(3000, 1, 1200)).toEqual({width: 1200, height: 1});
+  });
+
+  it('keeps the precise rounding without the guard', () => {
+    expect(fitWithin(3000, 7, 1200)).toEqual({width: 1200, height: 3});
   });
 
   it('handles a square image', () => {
