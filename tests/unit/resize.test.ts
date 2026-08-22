@@ -25,4 +25,12 @@ describe('fitWithin', () => {
   it('handles a square image', () => {
     expect(fitWithin(2400, 2400, 1200)).toEqual({width: 1200, height: 1200});
   });
+
+  it('clamps portrait images: width guard with near-zero values', () => {
+    expect(fitWithin(1, 3000, 1200)).toEqual({width: 1, height: 1200});
+  });
+
+  it('clamps portrait images: width rounds and maintains precision', () => {
+    expect(fitWithin(7, 3000, 1200)).toEqual({width: 3, height: 1200});
+  });
 });
