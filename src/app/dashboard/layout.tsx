@@ -21,10 +21,12 @@ export default async function DashboardLayout({children}: {children: React.React
         </form>
       </header>
       <nav className="mt-6 flex gap-1 overflow-x-auto rounded-2xl bg-card p-1 ring-1 ring-line">
-        <Link href="/dashboard" className="flex-1 rounded-xl px-3 py-2 text-center text-sm font-medium hover:bg-cream">{t('feedback')}</Link>
-        <Link href="/dashboard/tische" className="flex-1 rounded-xl px-3 py-2 text-center text-sm font-medium hover:bg-cream">{t('tables')}</Link>
-        <Link href="/dashboard/statistik" className="flex-1 rounded-xl px-3 py-2 text-center text-sm font-medium hover:bg-cream">{t('stats')}</Link>
-        <Link href="/dashboard/einstellungen" className="flex-1 rounded-xl px-3 py-2 text-center text-sm font-medium hover:bg-cream">{t('settings')}</Link>
+        <Link href="/dashboard" className="flex-1 whitespace-nowrap rounded-xl px-3 py-2 text-center text-sm font-medium hover:bg-cream">{t('feedback')}</Link>
+        <Link href="/dashboard/tische" className="flex-1 whitespace-nowrap rounded-xl px-3 py-2 text-center text-sm font-medium hover:bg-cream">{t('tables')}</Link>
+        <Link href="/dashboard/speisekarte" className="flex-1 whitespace-nowrap rounded-xl px-3 py-2 text-center text-sm font-medium hover:bg-cream">{t('menu')}</Link>
+        <Link href="/dashboard/linkseite" className="flex-1 whitespace-nowrap rounded-xl px-3 py-2 text-center text-sm font-medium hover:bg-cream">{t('hub')}</Link>
+        <Link href="/dashboard/statistik" className="flex-1 whitespace-nowrap rounded-xl px-3 py-2 text-center text-sm font-medium hover:bg-cream">{t('stats')}</Link>
+        <Link href="/dashboard/einstellungen" className="flex-1 whitespace-nowrap rounded-xl px-3 py-2 text-center text-sm font-medium hover:bg-cream">{t('settings')}</Link>
       </nav>
       <main className="mt-8">{children}</main>
     </div>

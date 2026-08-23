@@ -4,7 +4,8 @@
     "save": "Speichern",
     "delete": "Löschen",
     "back": "Zurück",
-    "error": "Das hat leider nicht geklappt. Bitte versuchen Sie es noch einmal."
+    "error": "Das hat leider nicht geklappt. Bitte versuchen Sie es noch einmal.",
+    "saved": "Gespeichert"
   },
   "guest": {
     "question": "Wie war Ihr Besuch bei uns?",
@@ -57,7 +58,9 @@
   },
   "nav": {
     "feedback": "Feedback",
-    "tables": "Tische & Links",
+    "tables": "Tische & QR",
+    "menu": "Speisekarte",
+    "hub": "Link-Seite",
     "stats": "Statistik",
     "settings": "Einstellungen"
   },
@@ -91,7 +94,7 @@
     "noComment": "Keine Nachricht"
   },
   "tables": {
-    "title": "Tische & Links",
+    "title": "Tische & QR-Codes",
     "addLabel": "Neuen Tisch anlegen",
     "addPlaceholder": "z. B. Tisch 1",
     "addButton": "Hinzufügen",
@@ -120,6 +123,31 @@
     "switchButton": "Wechseln",
     "newVenue": "Neues Venue anlegen",
     "saved": "Gespeichert"
+  },
+  "hub": {
+    "title": "Link-Seite",
+    "intro": "Das sehen Gäste, wenn sie die NFC-Karte antippen.",
+    "enabledLabel": "Gäste landen zuerst auf der Link-Seite",
+    "enabledHint": "Ausgeschaltet sehen Gäste sofort die Sternebewertung wie bisher.",
+    "taglineLabel": "Kurzer Untertitel (optional)",
+    "taglinePlaceholder": "z. B. Frisch geröstet seit 1998",
+    "blocksTitle": "Buttons",
+    "builtinHint": "Speisekarte und Bewerten führen in die App. Sie lassen sich umbenennen, ausblenden und umsortieren, aber nicht löschen.",
+    "menuMissingHint": "Der Speisekarte-Button erscheint für Gäste erst, sobald die Karte mindestens ein Gericht enthält.",
+    "labelLabel": "Beschriftung",
+    "iconLabel": "Symbol",
+    "urlLabel": "Link",
+    "urlPlaceholder": "z. B. instagram.com/cafesonne",
+    "addTitle": "Eigenen Link hinzufügen",
+    "addButton": "Hinzufügen",
+    "show": "Einblenden",
+    "hide": "Ausblenden",
+    "hidden": "ausgeblendet",
+    "moveUp": "Nach oben",
+    "moveDown": "Nach unten",
+    "previewButton": "Link-Seite ansehen",
+    "invalidUrl": "Dieser Link ist ungültig. Erlaubt sind https-Adressen sowie tel:- und mailto:-Links.",
+    "tooMany": "Mehr als {max} eigene Links sind nicht möglich."
   },
   "landing": {
     "claim": "Mehr Google-Bewertungen. Kritik bleibt intern.",
