@@ -100,23 +100,27 @@ export async function getVenueMenu(venueId: string): Promise<MenuCategory[]> {
   // tables (menu_items_category_same_venue). If it ever reports an ambiguous or
   // missing relationship, name it explicitly: `menu_items!menu_items_category_same_venue (...)`.
   //
-  // Sorting items in JS rather than via a nested order(): the embedded rows
-  // come back unordered often enough that relying on it would be a lottery.
-  return ((data ?? []) as unknown as MenuRow[]).map((c) => ({
-    id: c.id,
-    name: c.name,
-    items: [...c.menu_items]
-      .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
-      .map((i) => ({
-        id: i.id,
-        name: i.name,
-        description: i.description,
-        priceCents: i.price_cents,
-        dietTags: i.diet_tags,
-        allergens: i.allergens,
-        additives: i.additives,
-        imageUrl: i.image_url,
-        soldOut: i.sold_out
-      }))
-  }));
+  // Sorting categories and items in JS rather than via order(): the rows come back
+  // unordered or partially ordered often enough that relying on the database alone
+  // would be a lottery. Tied positions are legal because the indexes are not unique —
+  // the dashboard's reordering can produce them transiently.
+  return (((data ?? []) as unknown as MenuRow[])
+    .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
+    .map((c) => ({
+      id: c.id,
+      name: c.name,
+      items: [...c.menu_items]
+        .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
+        .map((i) => ({
+          id: i.id,
+          name: i.name,
+          description: i.description,
+          priceCents: i.price_cents,
+          dietTags: i.diet_tags,
+          allergens: i.allergens,
+          additives: i.additives,
+          imageUrl: i.image_url,
+          soldOut: i.sold_out
+        }))
+    })));
 }
