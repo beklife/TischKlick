@@ -13,11 +13,14 @@ export type Venue = {
   googlePlaceId: string | null;
   googleReviewUrl: string | null;
   logoUrl: string | null;
+  hubEnabled: boolean;
+  hubTagline: string | null;
 };
 
 type VenueRow = {
   id: string; name: string; slug: string;
   google_place_id: string | null; google_review_url: string | null; logo_url: string | null;
+  hub_enabled: boolean; hub_tagline: string | null;
 };
 
 function toVenue(r: VenueRow): Venue {
@@ -25,11 +28,14 @@ function toVenue(r: VenueRow): Venue {
     id: r.id, name: r.name, slug: r.slug,
     googlePlaceId: r.google_place_id,
     googleReviewUrl: r.google_review_url,
-    logoUrl: r.logo_url
+    logoUrl: r.logo_url,
+    hubEnabled: r.hub_enabled,
+    hubTagline: r.hub_tagline
   };
 }
 
-const VENUE_COLS = 'id, name, slug, google_place_id, google_review_url, logo_url';
+const VENUE_COLS =
+  'id, name, slug, google_place_id, google_review_url, logo_url, hub_enabled, hub_tagline';
 
 export async function getOwnerVenues(): Promise<Venue[]> {
   const supabase = await createSupabaseServerClient();
@@ -70,7 +76,13 @@ export async function createVenueWithFirstTable(
   return venue.id;
 }
 
-export type VenueStats = {taps: number; google: number; feedback: number; conversionPercent: number};
+export type VenueStats = {
+  taps: number;
+  google: number;
+  feedback: number;
+  menuViews: number;
+  conversionPercent: number;
+};
 
 export async function getVenueStats(supabase: SupabaseClient, venueId: string): Promise<VenueStats> {
   const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
@@ -86,16 +98,29 @@ export async function getVenueStats(supabase: SupabaseClient, venueId: string): 
     return count ?? 0;
   }
 
-  const [taps, google, feedback] = await Promise.all([
+  async function countMenuViews(): Promise<number> {
+    const {count} = await supabase
+      .from('tap_events')
+      .select('id', {count: 'exact', head: true})
+      .eq('venue_id', venueId)
+      .gte('created_at', since)
+      .not('menu_viewed_at', 'is', null);
+    return count ?? 0;
+  }
+
+  const [taps, google, feedback, menuViews] = await Promise.all([
     countOutcome(),
     countOutcome('google_redirect'),
-    countOutcome('private_feedback')
+    countOutcome('private_feedback'),
+    countMenuViews()
   ]);
 
   return {
     taps,
     google,
     feedback,
+    menuViews,
+    // Unchanged meaning: a menu view is engagement, not a conversion.
     conversionPercent: taps === 0 ? 0 : Math.round(((google + feedback) / taps) * 100)
   };
 }

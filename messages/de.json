@@ -105,6 +105,7 @@
     "title": "Statistik",
     "period": "Letzte 30 Tage",
     "taps": "Aufrufe",
+    "menuViews": "Speisekarte geöffnet",
     "google": "Google-Weiterleitungen",
     "feedback": "Privates Feedback",
     "conversion": "{percent} % der Aufrufe führten zu einer Aktion"

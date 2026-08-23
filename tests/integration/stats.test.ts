@@ -33,11 +33,11 @@ beforeAll(async () => {
   const nowDate = new Date().toISOString();
   await admin.from('tap_events').insert([
     {table_id: tableId, venue_id: venueId, outcome: 'opened', created_at: nowDate},
-    {table_id: tableId, venue_id: venueId, outcome: 'opened', created_at: nowDate},
+    {table_id: tableId, venue_id: venueId, outcome: 'opened', created_at: nowDate, menu_viewed_at: nowDate},
     {table_id: tableId, venue_id: venueId, outcome: 'google_redirect', created_at: nowDate},
-    {table_id: tableId, venue_id: venueId, outcome: 'google_redirect', created_at: nowDate},
+    {table_id: tableId, venue_id: venueId, outcome: 'google_redirect', created_at: nowDate, menu_viewed_at: nowDate},
     {table_id: tableId, venue_id: venueId, outcome: 'private_feedback', created_at: nowDate},
-    {table_id: tableId, venue_id: venueId, outcome: 'opened', created_at: oldDate} // outside window
+    {table_id: tableId, venue_id: venueId, outcome: 'opened', created_at: oldDate, menu_viewed_at: oldDate} // outside window
   ]);
 });
 
@@ -48,7 +48,7 @@ afterAll(async () => {
 describe('getVenueStats', () => {
   it('counts taps and outcomes within 30 days', async () => {
     const stats = await getVenueStats(admin, venueId);
-    expect(stats).toEqual({taps: 5, google: 2, feedback: 1, conversionPercent: 60});
+    expect(stats).toEqual({taps: 5, google: 2, feedback: 1, menuViews: 2, conversionPercent: 60});
   });
 
   it('returns zeros for a venue without taps', async () => {
@@ -56,6 +56,6 @@ describe('getVenueStats', () => {
       .insert({owner_id: ownerId, name: 'Leer', slug: `leer-${Date.now()}`})
       .select('id').single();
     const stats = await getVenueStats(admin, empty!.id);
-    expect(stats).toEqual({taps: 0, google: 0, feedback: 0, conversionPercent: 0});
+    expect(stats).toEqual({taps: 0, google: 0, feedback: 0, menuViews: 0, conversionPercent: 0});
   });
 });

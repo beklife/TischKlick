@@ -13,6 +13,7 @@ export default async function StatistikPage() {
 
   const tiles = [
     {label: t('taps'), value: stats.taps},
+    {label: t('menuViews'), value: stats.menuViews},
     {label: t('google'), value: stats.google},
     {label: t('feedback'), value: stats.feedback}
   ];
@@ -23,7 +24,7 @@ export default async function StatistikPage() {
         <h1 className="text-xl font-semibold">{t('title')}</h1>
         <span className="text-sm text-muted">{t('period')}</span>
       </div>
-      <div className="mt-6 grid grid-cols-3 gap-3">
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {tiles.map((tile) => (
           <div key={tile.label} className="rounded-2xl bg-card p-4 text-center ring-1 ring-line">
             <p className="text-3xl font-semibold text-terra">{tile.value}</p>
