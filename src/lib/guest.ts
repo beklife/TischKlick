@@ -18,6 +18,8 @@ export type GuestTable = {
     logoUrl: string | null;
     googlePlaceId: string | null;
     googleReviewUrl: string | null;
+    hubEnabled: boolean;
+    hubTagline: string | null;
   };
 };
 
@@ -25,7 +27,9 @@ export async function getTableByCode(code: string): Promise<GuestTable | null> {
   const supabase = createSupabaseAdminClient();
   const {data, error} = await supabase
     .from('tables')
-    .select('id, code, label, venues (id, name, logo_url, google_place_id, google_review_url)')
+    .select(
+      'id, code, label, venues (id, name, logo_url, google_place_id, google_review_url, hub_enabled, hub_tagline)'
+    )
     .eq('code', code)
     .maybeSingle();
   // With .maybeSingle(), "no rows" is data: null, error: null — not an error.
@@ -36,6 +40,7 @@ export async function getTableByCode(code: string): Promise<GuestTable | null> {
   const v = data.venues as unknown as {
     id: string; name: string; logo_url: string | null;
     google_place_id: string | null; google_review_url: string | null;
+    hub_enabled: boolean; hub_tagline: string | null;
   };
   return {
     id: data.id,
@@ -46,7 +51,9 @@ export async function getTableByCode(code: string): Promise<GuestTable | null> {
       name: v.name,
       logoUrl: v.logo_url,
       googlePlaceId: v.google_place_id,
-      googleReviewUrl: v.google_review_url
+      googleReviewUrl: v.google_review_url,
+      hubEnabled: v.hub_enabled,
+      hubTagline: v.hub_tagline
     }
   };
 }
@@ -99,4 +106,18 @@ export async function submitFeedback(input: {
   });
   if (error) throw error;
   if (input.tapId) await setTapOutcome(input.tapId, 'private_feedback');
+}
+
+export async function markMenuViewed(tapId: string, tableId: string): Promise<void> {
+  const supabase = createSupabaseAdminClient();
+  // Scoped to the tap's own table so a guessed/forged ?t= cannot stamp a
+  // stranger's row, and idempotent so a reload does not move the timestamp.
+  const {error} = await supabase
+    .from('tap_events')
+    .update({menu_viewed_at: new Date().toISOString()})
+    .eq('id', tapId)
+    .eq('table_id', tableId)
+    .is('menu_viewed_at', null);
+  // Analytics, not the guest flow: never throw. Same rule as setTapOutcome.
+  if (error) console.error('markMenuViewed failed:', error);
 }
