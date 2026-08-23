@@ -149,6 +149,20 @@
     "invalidUrl": "Dieser Link ist ungültig. Erlaubt sind https-Adressen sowie tel:- und mailto:-Links.",
     "tooMany": "Mehr als {max} eigene Links sind nicht möglich."
   },
+  "menu": {
+    "title": "Speisekarte",
+    "intro": "Kategorien und Gerichte. Gäste erreichen die Karte über den Speisekarte-Button auf der Link-Seite.",
+    "addCategoryLabel": "Neue Kategorie",
+    "addCategoryPlaceholder": "z. B. Vorspeisen",
+    "addCategoryButton": "Anlegen",
+    "emptyCategories": "Noch keine Kategorien. Legen Sie die erste an.",
+    "itemCount": "{count, plural, =0 {Keine Gerichte} one {1 Gericht} other {# Gerichte}}",
+    "editItems": "Gerichte bearbeiten",
+    "categoryNameLabel": "Name der Kategorie",
+    "deleteCategoryHint": "Löscht auch alle Gerichte dieser Kategorie.",
+    "moveUp": "Nach oben",
+    "moveDown": "Nach unten"
+  },
   "landing": {
     "claim": "Mehr Google-Bewertungen. Kritik bleibt intern.",
     "sub": "NFC-Karten auf dem Tisch – Gäste bewerten mit einem Tipp.",
