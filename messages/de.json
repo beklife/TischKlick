@@ -30,7 +30,17 @@
     "thanksTitle": "Vielen Dank für Ihr Feedback!",
     "thanksBody": "Ihre Nachricht wurde direkt an {venue} übermittelt.",
     "footerPrivacy": "Datenschutz",
-    "footerImpressum": "Impressum"
+    "footerImpressum": "Impressum",
+    "menuTitle": "Speisekarte",
+    "menuEmpty": "Die Speisekarte ist noch nicht hinterlegt.",
+    "soldOut": "ausverkauft",
+    "legendTitle": "Kennzeichnung",
+    "diet": {
+      "vegetarisch": "vegetarisch",
+      "vegan": "vegan",
+      "scharf": "scharf",
+      "glutenfrei": "glutenfrei"
+    }
   },
   "auth": {
     "loginTitle": "Anmelden",

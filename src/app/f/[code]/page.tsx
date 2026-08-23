@@ -1,45 +1,37 @@
-import {getTranslations} from 'next-intl/server';
-import Image from 'next/image';
-import {getTableByCode, recordTap} from '@/lib/guest';
+import {getTableByCode, recordTap, cleanTapId} from '@/lib/guest';
+import {getVenueHubBlocks, venueHasMenuItems, visibleHubBlocks} from '@/lib/hub';
 import {InvalidLink} from '../invalid-link';
+import {StarRating} from './star-rating';
+import {Hub} from './hub';
 
 export const dynamic = 'force-dynamic';
 
-export default async function GuestRatingPage({params}: {params: Promise<{code: string}>}) {
+type Props = {
+  params: Promise<{code: string}>;
+  searchParams: Promise<{t?: string}>;
+};
+
+export default async function GuestEntryPage({params, searchParams}: Props) {
   const {code} = await params;
+  const sp = await searchParams;
   const table = await getTableByCode(code);
-  const t = await getTranslations('guest');
   if (!table) return <InvalidLink />;
 
-  const tapId = await recordTap(table.id, table.venue.id);
+  // A tap is recorded once per NFC touch. Coming back here from the menu carries
+  // ?t= along, so Hub → Karte → back stays a single tap_event.
+  const tapId = cleanTapId(sp.t) ?? (await recordTap(table.id, table.venue.id));
 
-  return (
-    <div className="text-center">
-      {table.venue.logoUrl ? (
-        <Image
-          src={table.venue.logoUrl}
-          alt={table.venue.name}
-          width={96}
-          height={96}
-          className="mx-auto mb-4 h-24 w-24 rounded-full object-cover"
-          unoptimized
-        />
-      ) : null}
-      <p className="text-lg font-medium text-terra">{table.venue.name}</p>
-      <h1 className="mt-4 text-2xl font-semibold">{t('question')}</h1>
-      <div className="mt-8 flex flex-row-reverse justify-center gap-2">
-        {[5, 4, 3, 2, 1].map((r) => (
-          <a
-            key={r}
-            href={`/f/${code}/${r}?t=${tapId}`}
-            aria-label={t('starLabel', {count: r})}
-            className="peer flex h-14 w-14 items-center justify-center rounded-2xl bg-card text-3xl text-muted/40 shadow-sm ring-1 ring-line transition-colors hover:text-terra peer-hover:text-terra active:scale-95 active:text-terra"
-          >
-            ★
-          </a>
-        ))}
-      </div>
-      <p className="mt-6 text-sm text-muted">{t('ratingHint')}</p>
-    </div>
-  );
+  if (table.venue.hubEnabled) {
+    const [blocks, hasMenuItems] = await Promise.all([
+      getVenueHubBlocks(table.venue.id),
+      venueHasMenuItems(table.venue.id)
+    ]);
+    const visible = visibleHubBlocks(blocks, {hasMenuItems});
+    // Every block hidden would be a dead end — fall through to the stars.
+    if (visible.length > 0) {
+      return <Hub code={code} tapId={tapId} venue={table.venue} blocks={visible} />;
+    }
+  }
+
+  return <StarRating code={code} tapId={tapId} venue={table.venue} />;
 }
