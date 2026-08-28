@@ -15,6 +15,16 @@ let hubTableId: string;
 let hubCode: string;
 let plainCode: string;
 
+// A failed insert doesn't throw with supabase-js — it returns {data: null, error}.
+// Left unchecked, that surfaces later as a confusing "element not found" locator
+// timeout (e.g. a missing Speisekarte button) instead of naming the real cause.
+// This fails loudly with the actual PostgREST error message instead.
+function must<T>(result: {data: T | null; error: {message: string} | null}, what: string): T {
+  if (result.error) throw new Error(`fixture: ${what} failed — ${result.error.message}`);
+  if (!result.data) throw new Error(`fixture: ${what} returned no row`);
+  return result.data;
+}
+
 test.beforeAll(async () => {
   const stamp = Date.now();
   const {data, error} = await admin.auth.admin.createUser({
@@ -26,35 +36,44 @@ test.beforeAll(async () => {
   ownerId = data.user.id;
 
   // Venue with the hub switched on and a one-item menu.
-  const {data: hubVenue} = await admin
-    .from('venues')
-    .insert({
-      owner_id: ownerId,
-      name: 'Hub Café',
-      slug: `e2e-hub-${stamp}`,
-      google_place_id: 'ChIJhub',
-      hub_enabled: true,
-      hub_tagline: 'Frisch geröstet'
-    })
-    .select('id')
-    .single();
+  const hubVenue = must<{id: string}>(
+    await admin
+      .from('venues')
+      .insert({
+        owner_id: ownerId,
+        name: 'Hub Café',
+        slug: `e2e-hub-${stamp}`,
+        google_place_id: 'ChIJhub',
+        hub_enabled: true,
+        hub_tagline: 'Frisch geröstet'
+      })
+      .select('id')
+      .single(),
+    'hubVenue insert'
+  );
 
   hubCode = `H${stamp.toString(36)}`.slice(0, 7).padEnd(7, 'h');
-  const {data: hubTable} = await admin
-    .from('tables')
-    .insert({venue_id: hubVenue!.id, label: 'Tisch 1', code: hubCode})
-    .select('id')
-    .single();
-  hubTableId = hubTable!.id;
+  const hubTable = must<{id: string}>(
+    await admin
+      .from('tables')
+      .insert({venue_id: hubVenue.id, label: 'Tisch 1', code: hubCode})
+      .select('id')
+      .single(),
+    'hubTable insert'
+  );
+  hubTableId = hubTable.id;
 
-  const {data: category} = await admin
-    .from('menu_categories')
-    .insert({venue_id: hubVenue!.id, name: 'Vorspeisen', position: 0})
-    .select('id')
-    .single();
-  await admin.from('menu_items').insert({
-    category_id: category!.id,
-    venue_id: hubVenue!.id,
+  const category = must<{id: string}>(
+    await admin
+      .from('menu_categories')
+      .insert({venue_id: hubVenue.id, name: 'Vorspeisen', position: 0})
+      .select('id')
+      .single(),
+    'category insert'
+  );
+  const {error: itemError} = await admin.from('menu_items').insert({
+    category_id: category.id,
+    venue_id: hubVenue.id,
     name: 'Bruschetta',
     description: 'Tomate, Basilikum',
     price_cents: 650,
@@ -62,17 +81,24 @@ test.beforeAll(async () => {
     diet_tags: ['vegetarisch'],
     position: 0
   });
+  if (itemError) throw new Error(`fixture: menu_items insert failed — ${itemError.message}`);
 
   // Second venue with the hub off — the regression guard.
-  const {data: plainVenue} = await admin
-    .from('venues')
-    .insert({owner_id: ownerId, name: 'Klassik Café', slug: `e2e-plain-${stamp}`})
-    .select('id')
-    .single();
+  const plainVenue = must<{id: string}>(
+    await admin
+      .from('venues')
+      .insert({owner_id: ownerId, name: 'Klassik Café', slug: `e2e-plain-${stamp}`})
+      .select('id')
+      .single(),
+    'plainVenue insert'
+  );
   plainCode = `P${stamp.toString(36)}`.slice(0, 7).padEnd(7, 'p');
-  await admin
+  const {error: plainTableError} = await admin
     .from('tables')
-    .insert({venue_id: plainVenue!.id, label: 'Tisch 1', code: plainCode});
+    .insert({venue_id: plainVenue.id, label: 'Tisch 1', code: plainCode});
+  if (plainTableError) {
+    throw new Error(`fixture: plainTable insert failed — ${plainTableError.message}`);
+  }
 });
 
 test.afterAll(async () => {
