@@ -22,7 +22,8 @@ export default async function SpeisekartePage() {
     // calls it ambiguous, write `menu_items!menu_items_category_same_venue (id)`.
     .select('id, name, position, menu_items (id)')
     .eq('venue_id', venue.id)
-    .order('position');
+    .order('position')
+    .order('id');
 
   const rows = (categories ?? []) as Array<{
     id: string;
@@ -31,11 +32,22 @@ export default async function SpeisekartePage() {
     menu_items: Array<{id: string}>;
   }>;
 
+  // Split on the literal so "Link-Seite" can link to /dashboard/linkseite
+  // without introducing rich-text message syntax for a single call site.
+  const [hubHintBefore, hubHintAfter] = t('hubDisabledHint').split('Link-Seite');
+
   return (
     <div className="mx-auto max-w-lg space-y-6">
       <div>
         <h1 className="text-xl font-semibold">{t('title')}</h1>
         <p className="mt-1 text-sm text-muted">{t('intro')}</p>
+        {!venue.hubEnabled ? (
+          <p className="mt-1 text-xs text-muted">
+            {hubHintBefore}
+            <Link href="/dashboard/linkseite" className="underline">Link-Seite</Link>
+            {hubHintAfter}
+          </p>
+        ) : null}
       </div>
 
       <form action={addCategory} className="flex gap-2">

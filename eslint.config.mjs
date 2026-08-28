@@ -8,7 +8,8 @@ const eslintConfig = defineConfig([
   // Override default ignores of eslint-config-next.
   // NOTE: this REPLACES the defaults rather than extending them, so every
   // generated directory must be listed here explicitly — anything missing gets
-  // linted as source. Keep in sync with .gitignore.
+  // linted as source. Keep in sync with .gitignore (.remember/** is an
+  // exception: it's ignored via the user's global gitignore, not this repo's).
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",

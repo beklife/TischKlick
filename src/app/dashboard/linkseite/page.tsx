@@ -32,7 +32,8 @@ export default async function LinkseitePage({searchParams}: Props) {
       .from('venue_links')
       .select('id, kind, label, icon, url, enabled, position')
       .eq('venue_id', venue.id)
-      .order('position'),
+      .order('position')
+      .order('id'),
     supabase
       .from('menu_items')
       .select('id', {count: 'exact', head: true})

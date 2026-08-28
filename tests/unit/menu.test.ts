@@ -10,14 +10,40 @@ import {
 } from '@/lib/menu';
 
 describe('vocabularies', () => {
-  it('covers the 14 EU allergens as letters a-n', () => {
-    expect(Object.keys(ALLERGENS)).toHaveLength(14);
-    expect(Object.keys(ALLERGENS)[0]).toBe('a');
-    expect(Object.keys(ALLERGENS)[13]).toBe('n');
+  it('pins the 14 EU allergen code-to-label bindings exactly', () => {
+    expect(ALLERGENS).toEqual({
+      a: 'Glutenhaltiges Getreide',
+      b: 'Krebstiere',
+      c: 'Eier',
+      d: 'Fische',
+      e: 'Erdnüsse',
+      f: 'Sojabohnen',
+      g: 'Milch/Laktose',
+      h: 'Schalenfrüchte',
+      i: 'Sellerie',
+      j: 'Senf',
+      k: 'Sesamsamen',
+      l: 'Schwefeldioxid/Sulfite',
+      m: 'Lupinen',
+      n: 'Weichtiere'
+    });
   });
 
-  it('covers the German additive numbers 1-12', () => {
-    expect(Object.keys(ADDITIVES)).toHaveLength(12);
+  it('pins the 12 German additive code-to-label bindings exactly', () => {
+    expect(ADDITIVES).toEqual({
+      '1': 'mit Farbstoff',
+      '2': 'mit Konservierungsstoff',
+      '3': 'mit Antioxidationsmittel',
+      '4': 'mit Geschmacksverstärker',
+      '5': 'geschwefelt',
+      '6': 'geschwärzt',
+      '7': 'gewachst',
+      '8': 'mit Phosphat',
+      '9': 'mit Süßungsmittel',
+      '10': 'enthält eine Phenylalaninquelle',
+      '11': 'koffeinhaltig',
+      '12': 'chininhaltig'
+    });
   });
 
   it('offers four diet tags', () => {

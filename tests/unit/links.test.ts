@@ -36,6 +36,10 @@ describe('normalizeLinkUrl', () => {
     expect(normalizeLinkUrl('data:text/html,<script>alert(1)</script>')).toBeNull();
   });
 
+  it('strips userinfo so the displayed host cannot be spoofed', () => {
+    expect(normalizeLinkUrl('https://google.com@evil.com')).toBe('https://evil.com/');
+  });
+
   it('rejects a protocol-relative URL', () => {
     expect(normalizeLinkUrl('//evil.example')).toBeNull();
   });

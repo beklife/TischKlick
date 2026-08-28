@@ -162,7 +162,7 @@
     "deleteCategoryHint": "Löscht auch alle Gerichte dieser Kategorie.",
     "moveUp": "Nach oben",
     "moveDown": "Nach unten",
-    "itemsTitle": "Gerichte",
+    "hubDisabledHint": "Die Speisekarte ist für Gäste noch nicht sichtbar – schalten Sie dafür die Link-Seite ein.",
     "backToCategories": "← Alle Kategorien",
     "nameLabel": "Name",
     "namePlaceholder": "z. B. Bruschetta",

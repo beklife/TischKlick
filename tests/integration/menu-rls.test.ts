@@ -136,6 +136,10 @@ describe('hub and menu isolation', () => {
       .from('menu_items')
       .insert({category_id: categoryA, venue_id: venueB, name: 'Schmuggelware'});
     expect(error).not.toBeNull();
+    // Pin the mechanism, not just "it failed": 23503 is a foreign-key
+    // violation, proving the composite FK rejected this — not RLS (which
+    // would fail with 42501) or some unrelated error.
+    expect(error?.code).toBe('23503');
   });
 
   it('anon has no privileges on the new tables', async () => {
@@ -144,6 +148,10 @@ describe('hub and menu isolation', () => {
     const items = await anon.from('menu_items').select('id');
     expect(links.error).not.toBeNull();
     expect(items.error).not.toBeNull();
+    // 42501 is insufficient_privilege — confirms this is a grants/RLS
+    // rejection, not some other failure that happens to return an error.
+    expect(links.error?.code).toBe('42501');
+    expect(items.error?.code).toBe('42501');
   });
 
   it('deleting a category cascades its items away', async () => {

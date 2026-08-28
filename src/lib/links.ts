@@ -37,6 +37,12 @@ export function normalizeLinkUrl(raw: unknown): string | null {
   if (url.protocol !== 'https:') return null;
   if (!url.hostname.includes('.')) return null;
 
+  // Strip userinfo: 'https://google.com@evil.com' parses with hostname
+  // evil.com, but left alone the stored/displayed URL still shows
+  // "google.com@evil.com" up front, which reads as the trusted host.
+  url.username = '';
+  url.password = '';
+
   const href = url.toString();
   return href.length <= MAX_LINK_URL_LENGTH ? href : null;
 }

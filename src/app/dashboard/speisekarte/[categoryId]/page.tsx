@@ -46,11 +46,15 @@ export default async function KategoriePage({params, searchParams}: Props) {
   const tc = await getTranslations('common');
 
   const supabase = await createSupabaseServerClient();
-  // RLS scopes this to the owner's venues, so an unknown or foreign id is a 404.
+  // RLS scopes this to the owner's venues, but not to the active venue — an
+  // owner with several venues could otherwise load a category from venue B
+  // while venue A is active. Scoping to venue.id here makes a stale category
+  // page 404 instead of silently posting into the wrong venue.
   const {data: category} = await supabase
     .from('menu_categories')
     .select('id, name')
     .eq('id', categoryId)
+    .eq('venue_id', venue.id)
     .maybeSingle();
   if (!category) notFound();
 
@@ -58,7 +62,8 @@ export default async function KategoriePage({params, searchParams}: Props) {
     .from('menu_items')
     .select('id, name, description, price_cents, diet_tags, allergens, additives, image_url, sold_out, position')
     .eq('category_id', categoryId)
-    .order('position');
+    .order('position')
+    .order('id');
   const rows = (items ?? []) as ItemRow[];
 
   // Shared between the "new item" form and every edit form. Named itemFields
