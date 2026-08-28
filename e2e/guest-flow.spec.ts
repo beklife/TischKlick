@@ -40,7 +40,10 @@ test('negative path: 2 stars -> private feedback -> danke', async ({page}) => {
   await page.getByText('Service', {exact: true}).click();
   await page.getByLabel('Ihre Nachricht (optional)').fill('E2E: zu lange gewartet');
   await page.getByRole('button', {name: 'Feedback senden'}).click();
-  await expect(page.getByText('Vielen Dank für Ihr Feedback!')).toBeVisible();
+  // Scoped to the heading: Next.js's __next-route-announcer__ live region
+  // transiently carries the same text after a client-side navigation, so an
+  // unscoped getByText intermittently hits a strict-mode violation.
+  await expect(page.getByRole('heading', {name: 'Vielen Dank für Ihr Feedback!'})).toBeVisible();
 
   const {data: fb} = await admin.from('feedback')
     .select('rating, comment, categories')
