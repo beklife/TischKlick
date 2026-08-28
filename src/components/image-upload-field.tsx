@@ -22,26 +22,39 @@ export function ImageUploadField({name, id, label, hint, buttonLabel}: Props) {
     setBusy(true);
     try {
       const bitmap = await createImageBitmap(file);
-      const {width, height} = fitWithin(bitmap.width, bitmap.height, MAX_IMAGE_EDGE);
-      bitmap.close();
-      if (width === bitmap.width && height === bitmap.height && file.size <= 400_000) return;
+      // Dimensions must be captured before close() -- a detached ImageBitmap
+      // reports 0x0, which would make the "already small enough" guard below
+      // never fire.
+      const sourceWidth = bitmap.width;
+      const sourceHeight = bitmap.height;
+      const {width, height} = fitWithin(sourceWidth, sourceHeight, MAX_IMAGE_EDGE);
+      if (width === sourceWidth && height === sourceHeight && file.size <= 400_000) {
+        bitmap.close();
+        return;
+      }
 
       const canvas = document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
       const context = canvas.getContext('2d');
-      if (!context) return;
-      const redraw = await createImageBitmap(file);
-      context.drawImage(redraw, 0, 0, width, height);
-      redraw.close();
+      if (!context) {
+        bitmap.close();
+        return;
+      }
+      context.drawImage(bitmap, 0, 0, width, height);
+      bitmap.close();
 
+      // Preserve the source format: flattening a PNG's alpha channel onto a
+      // JPEG canvas silently turns transparent pixels black.
+      const outputType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+      const outputName = outputType === 'image/png' ? 'foto.png' : 'foto.jpg';
       const blob = await new Promise<Blob | null>((resolve) =>
-        canvas.toBlob(resolve, 'image/jpeg', 0.82)
+        canvas.toBlob(resolve, outputType, 0.82)
       );
       if (!blob) return;
 
       const transfer = new DataTransfer();
-      transfer.items.add(new File([blob], 'foto.jpg', {type: 'image/jpeg'}));
+      transfer.items.add(new File([blob], outputName, {type: outputType}));
       input.files = transfer.files;
     } catch {
       // Downscaling is an optimisation. If the browser cannot do it, send the
