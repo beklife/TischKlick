@@ -1,16 +1,202 @@
 @import 'tailwindcss';
 
+/* ============================================================
+   TischKlick — bold hospitality-tech
+   Dark, high-contrast, signage typography. The guest surface is
+   a phone in a dim restaurant; the dashboard is a working tool.
+   ============================================================ */
+
 @theme {
-  --color-cream: #faf6f0;
-  --color-ink: #2b2620;
-  --color-terra: #c05e33;
-  --color-terra-dark: #9c4a26;
-  --color-sage: #6b7f5e;
-  --color-card: #ffffff;
-  --color-muted: #8a7f72;
-  --color-line: #e8e0d4;
+  /* --- surfaces (warm-shifted blacks, never neutral grey) --- */
+  --color-void: #0b0a09;
+  --color-shell: #141210;
+  --color-shell-2: #1e1b18;
+  --color-shell-3: #272320;
+  --color-hair: #2e2925;
+  --color-hair-2: #3d3630;
+
+  /* --- type --- */
+  --color-chalk: #f7f4ef;
+  --color-ash: #a49a91;
+  --color-ash-2: #8f857c;
+
+  /* --- accents --- */
+  --color-flame: #ff5c1a;
+  --color-flame-lit: #ff8340;
+  --color-flame-deep: #e04a0f;
+  --color-zest: #d8f651;
+  --color-zest-deep: #a8c22e;
+  --color-berry: #f2555a;
+
+  /* --- legacy aliases -----------------------------------------
+     The old cream/terracotta names are still referenced in spots
+     that have not been rewritten yet. Pointing them at the new
+     palette keeps every surface coherent mid-migration instead of
+     leaving a half-light, half-dark app. */
+  --color-cream: #0b0a09;
+  --color-ink: #f7f4ef;
+  --color-card: #141210;
+  --color-line: #2e2925;
+  --color-muted: #a49a91;
+  --color-terra: #ff5c1a;
+  --color-terra-dark: #e04a0f;
+  --color-sage: #d8f651;
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-4xl: 1.75rem;
+  --radius-5xl: 2.25rem;
+
+  --animate-rise: rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-glow: glow 3.5s ease-in-out infinite;
+  --animate-sweep: sweep 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes sweep {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
 
 html {
   -webkit-tap-highlight-color: transparent;
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  /* Slight optical warmth: the dark ground eats stroke weight, so
+     text sits a touch heavier than it would on white. */
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-flame);
+  color: #fff;
+}
+
+/* One focus treatment everywhere, keyboard-only. */
+:focus-visible {
+  outline: 2px solid var(--color-flame);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   Utilities
+   ============================================================ */
+
+/* Expanded signage headline. Archivo's wdth axis does the work —
+   at large sizes the wider cut reads as confident rather than shouty. */
+@utility display {
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+@utility display-tight {
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 100;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Small structural label — the grid-marker voice used above sections. */
+@utility eyebrow {
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 100;
+  font-weight: 600;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ash-2);
+}
+
+/* Film grain. Keeps large dark fields from reading as flat #000 paint. */
+@utility grain {
+  position: relative;
+}
+@utility grain-layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* The product's signature: heat behind the primary action. */
+@utility flame-grad {
+  background-image: linear-gradient(135deg, var(--color-flame-lit), var(--color-flame) 45%, var(--color-flame-deep));
+}
+
+@utility flame-glow {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-flame) 55%, transparent),
+    0 10px 30px -8px color-mix(in oklab, var(--color-flame) 60%, transparent),
+    0 2px 8px -2px rgb(0 0 0 / 0.6);
+}
+
+/* Card lift on the dark ground: a hairline plus a real shadow. A ring
+   alone disappears against #0b0a09. */
+@utility panel {
+  background-color: var(--color-shell);
+  border: 1px solid var(--color-hair);
+  box-shadow:
+    0 1px 0 0 rgb(255 255 255 / 0.03) inset,
+    0 12px 28px -18px rgb(0 0 0 / 0.9);
+}
+
+/* Staggered entrance for lists — set --i on each child. */
+@utility rise-in {
+  animation: var(--animate-rise);
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -20,21 +20,23 @@ export default async function StatistikPage() {
 
   return (
     <div>
-      <div className="flex items-baseline justify-between">
-        <h1 className="text-xl font-semibold">{t('title')}</h1>
-        <span className="text-sm text-muted">{t('period')}</span>
+      <div className="flex items-baseline justify-between gap-3">
+        <h1 className="display text-2xl">{t('title')}</h1>
+        <span className="text-xs text-ash-2">{t('period')}</span>
       </div>
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+
+      <div className="mt-7 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
         {tiles.map((tile) => (
-          <div key={tile.label} className="rounded-2xl bg-card p-4 text-center ring-1 ring-line">
-            <p className="text-3xl font-semibold text-terra">{tile.value}</p>
-            <p className="mt-1 text-xs text-muted">{tile.label}</p>
+          <div key={tile.label} className="rounded-3xl panel p-4">
+            <p className="display text-[2rem] tabular-nums text-flame">{tile.value}</p>
+            <p className="mt-1 text-[0.6875rem] leading-snug text-ash">{tile.label}</p>
           </div>
         ))}
       </div>
-      <p className="mt-6 rounded-2xl bg-card p-4 text-center text-sm text-muted ring-1 ring-line">
-        {t('conversion', {percent: stats.conversionPercent})}
-      </p>
+
+      <div className="mt-3 rounded-3xl border border-zest/25 bg-zest/[0.07] p-5 text-center">
+        <p className="text-sm text-chalk">{t('conversion', {percent: stats.conversionPercent})}</p>
+      </div>
     </div>
   );
 }

@@ -32,23 +32,23 @@ export default async function EinstellungenPage({searchParams}: Props) {
 
   return (
     <div className="mx-auto max-w-lg space-y-8">
-      <h1 className="text-xl font-semibold">{t('title')}</h1>
+      <h1 className="display text-2xl">{t('title')}</h1>
       {sp.gespeichert ? (
-        <p className="rounded-xl bg-card p-3 text-sm text-sage ring-1 ring-sage">✓ {t('saved')}</p>
+        <p className="rounded-2xl border border-zest/40 bg-zest/10 p-3 text-sm text-zest">✓ {t('saved')}</p>
       ) : null}
 
       {venues.length > 1 ? (
         <form action={switchVenue} className="flex items-end gap-2">
-          <div className="flex-1">
+          <div className="min-w-0 flex-1">
             <label htmlFor="venueId" className="text-sm font-medium">{t('venueLabel')}</label>
             <select id="venueId" name="venueId" defaultValue={venue.id}
-              className="mt-1 w-full rounded-xl border border-line bg-card p-3">
+              className="mt-1 w-full rounded-2xl border border-hair bg-shell p-3 text-chalk placeholder:text-ash-2 transition-colors focus:border-flame/60 focus:outline-none">
               {venues.map((v) => (
                 <option key={v.id} value={v.id}>{v.name}</option>
               ))}
             </select>
           </div>
-          <button type="submit" className="rounded-xl border border-line px-4 py-3 text-sm font-medium">
+          <button type="submit" className="rounded-2xl border border-hair bg-shell-2 px-4 py-3 text-sm font-semibold text-ash transition-colors hover:border-hair-2 hover:text-chalk">
             {t('switchButton')}
           </button>
         </form>
@@ -56,11 +56,11 @@ export default async function EinstellungenPage({searchParams}: Props) {
 
       <form action={updateVenueName} className="space-y-2">
         <label htmlFor="name" className="text-sm font-medium">{t('nameLabel')}</label>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <input type="hidden" name="venueId" value={venue.id} />
           <input id="name" name="name" defaultValue={venue.name} required maxLength={120}
-            className="flex-1 rounded-xl border border-line bg-card p-3" />
-          <button type="submit" className="rounded-xl bg-terra px-4 py-2 font-medium text-white">
+            className="min-w-0 flex-1 rounded-2xl border border-hair bg-shell p-3 text-chalk placeholder:text-ash-2 transition-colors focus:border-flame/60 focus:outline-none" />
+          <button type="submit" className="rounded-2xl flame-grad px-4 py-2 font-display text-sm font-bold tracking-tight text-void transition-transform active:scale-[0.98]">
             {tc('save')}
           </button>
         </div>
@@ -68,11 +68,13 @@ export default async function EinstellungenPage({searchParams}: Props) {
 
       <form action={uploadLogo} className="space-y-2">
         <label htmlFor="logo" className="text-sm font-medium">{t('logoLabel')}</label>
-        <div className="flex gap-2">
+        {/* A file input will not shrink below its native button, so the row
+            stacks on narrow screens rather than pushing the page sideways. */}
+        <div className="flex flex-col gap-2 sm:flex-row">
           <input type="hidden" name="venueId" value={venue.id} />
           <input id="logo" name="logo" type="file" accept="image/png,image/jpeg" required
-            className="flex-1 rounded-xl border border-line bg-card p-2 text-sm" />
-          <button type="submit" className="rounded-xl bg-terra px-4 py-2 font-medium text-white">
+            className="w-full min-w-0 rounded-xl border border-hair bg-shell p-2 text-sm text-chalk transition-colors focus:border-flame/60 focus:outline-none sm:flex-1" />
+          <button type="submit" className="rounded-2xl flame-grad px-4 py-2 font-display text-sm font-bold tracking-tight text-void transition-transform active:scale-[0.98]">
             {t('logoButton')}
           </button>
         </div>
@@ -81,7 +83,7 @@ export default async function EinstellungenPage({searchParams}: Props) {
       <section className="space-y-3">
         <h2 className="font-medium">{t('googleTitle')}</h2>
         {venue.googleReviewUrl ? (
-          <p className="text-sm text-sage">
+          <p className="text-sm text-zest">
             ✓ {to('connected')} ·{' '}
             <a href={venue.googleReviewUrl} target="_blank" rel="noopener noreferrer" className="underline">
               {to('testLink')}
@@ -98,7 +100,7 @@ export default async function EinstellungenPage({searchParams}: Props) {
         />
       </section>
 
-      <Link href="/dashboard/onboarding" className="inline-block text-sm text-muted underline">
+      <Link href="/dashboard/onboarding" className="inline-block text-sm text-ash underline">
         + {t('newVenue')}
       </Link>
     </div>

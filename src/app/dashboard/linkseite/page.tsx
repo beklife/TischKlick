@@ -15,8 +15,8 @@ import {
 
 type Props = {searchParams: Promise<{gespeichert?: string; fehler?: string}>};
 
-const FIELD = 'rounded-xl border border-line bg-card p-3';
-const ICON_BUTTON = 'rounded-lg border border-line px-2 py-1 text-xs';
+const FIELD = 'rounded-2xl border border-hair bg-shell p-3 text-chalk placeholder:text-ash-2 transition-colors focus:border-flame/60 focus:outline-none';
+const ICON_BUTTON = 'rounded-lg border border-hair bg-shell-2 px-2 py-1 text-[0.6875rem] text-ash transition-colors hover:border-hair-2 hover:text-chalk';
 
 export default async function LinkseitePage({searchParams}: Props) {
   const venue = await getActiveVenue();
@@ -46,29 +46,29 @@ export default async function LinkseitePage({searchParams}: Props) {
   return (
     <div className="mx-auto max-w-lg space-y-8">
       <div>
-        <h1 className="text-xl font-semibold">{t('title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('intro')}</p>
+        <h1 className="display text-2xl">{t('title')}</h1>
+        <p className="mt-1 text-sm text-ash">{t('intro')}</p>
       </div>
 
       {sp.gespeichert ? (
-        <p className="rounded-xl bg-card p-3 text-sm text-sage ring-1 ring-sage">✓ {tc('saved')}</p>
+        <p className="rounded-2xl border border-zest/40 bg-zest/10 p-3 text-sm text-zest">✓ {tc('saved')}</p>
       ) : null}
       {sp.fehler === 'url' ? (
-        <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{t('invalidUrl')}</p>
+        <p className="rounded-2xl border border-berry/40 bg-berry/10 p-3 text-sm text-berry">{t('invalidUrl')}</p>
       ) : null}
       {sp.fehler === 'limit' ? (
-        <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
+        <p className="rounded-2xl border border-berry/40 bg-berry/10 p-3 text-sm text-berry">
           {t('tooMany', {max: MAX_CUSTOM_LINKS})}
         </p>
       ) : null}
 
-      <form action={updateHubSettings} className="space-y-3 rounded-2xl bg-card p-4 ring-1 ring-line">
+      <form action={updateHubSettings} className="space-y-3 rounded-3xl panel p-4">
         <input type="hidden" name="venueId" value={venue.id} />
         <label className="flex items-start gap-3">
           <input type="checkbox" name="hubEnabled" defaultChecked={venue.hubEnabled} className="mt-1" />
           <span>
             <span className="text-sm font-medium">{t('enabledLabel')}</span>
-            <span className="block text-xs text-muted">{t('enabledHint')}</span>
+            <span className="block text-xs text-ash">{t('enabledHint')}</span>
           </span>
         </label>
         <div>
@@ -82,23 +82,25 @@ export default async function LinkseitePage({searchParams}: Props) {
             className={`mt-1 w-full ${FIELD}`}
           />
         </div>
-        <button type="submit" className="rounded-xl bg-terra px-4 py-2 font-medium text-white">
+        <button type="submit" className="rounded-2xl flame-grad px-4 py-2 font-display text-sm font-bold tracking-tight text-void transition-transform active:scale-[0.98]">
           {tc('save')}
         </button>
       </form>
 
       <section className="space-y-3">
         <h2 className="font-medium">{t('blocksTitle')}</h2>
-        <p className="text-xs text-muted">{t('builtinHint')}</p>
+        <p className="text-xs text-ash">{t('builtinHint')}</p>
         {(itemCount ?? 0) === 0 ? (
-          <p className="text-xs text-muted">{t('menuMissingHint')}</p>
+          <p className="text-xs text-ash">{t('menuMissingHint')}</p>
         ) : null}
 
         <ul className="space-y-3">
           {rows.map((row, index) => (
-            <li key={row.id} className="rounded-2xl bg-card p-4 ring-1 ring-line">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-xs text-muted">
+            <li key={row.id} className="rounded-3xl panel p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                {/* A long custom URL must truncate rather than push the control
+                    row past the viewport on a phone. */}
+                <span className="min-w-0 flex-1 truncate text-xs text-ash">
                   {row.kind === 'custom' ? row.url : `/${row.kind}`}
                   {row.enabled ? '' : ` · ${t('hidden')}`}
                 </span>
@@ -125,7 +127,7 @@ export default async function LinkseitePage({searchParams}: Props) {
                   {row.kind === 'custom' ? (
                     <form action={deleteLink}>
                       <input type="hidden" name="id" value={row.id} />
-                      <button type="submit" className={`${ICON_BUTTON} text-red-700`}>{tc('delete')}</button>
+                      <button type="submit" className={`${ICON_BUTTON} text-berry`}>{tc('delete')}</button>
                     </form>
                   ) : null}
                 </div>
@@ -137,20 +139,20 @@ export default async function LinkseitePage({searchParams}: Props) {
               >
                 <input type="hidden" name="id" value={row.id} />
                 <div className="w-16">
-                  <label htmlFor={`icon-${row.id}`} className="text-xs text-muted">{t('iconLabel')}</label>
+                  <label htmlFor={`icon-${row.id}`} className="text-xs text-ash">{t('iconLabel')}</label>
                   <input id={`icon-${row.id}`} name="icon" defaultValue={row.icon ?? ''} maxLength={8} className={`w-full ${FIELD}`} />
                 </div>
                 <div className="min-w-32 flex-1">
-                  <label htmlFor={`label-${row.id}`} className="text-xs text-muted">{t('labelLabel')}</label>
+                  <label htmlFor={`label-${row.id}`} className="text-xs text-ash">{t('labelLabel')}</label>
                   <input id={`label-${row.id}`} name="label" defaultValue={row.label} required maxLength={40} className={`w-full ${FIELD}`} />
                 </div>
                 {row.kind === 'custom' ? (
                   <div className="min-w-full">
-                    <label htmlFor={`url-${row.id}`} className="text-xs text-muted">{t('urlLabel')}</label>
+                    <label htmlFor={`url-${row.id}`} className="text-xs text-ash">{t('urlLabel')}</label>
                     <input id={`url-${row.id}`} name="url" defaultValue={row.url ?? ''} required maxLength={500} className={`w-full ${FIELD}`} />
                   </div>
                 ) : null}
-                <button type="submit" className="rounded-xl border border-line px-4 py-3 text-sm font-medium">
+                <button type="submit" className="rounded-2xl border border-hair bg-shell-2 px-4 py-3 text-sm font-semibold text-ash transition-colors hover:border-hair-2 hover:text-chalk">
                   {tc('save')}
                 </button>
               </form>
@@ -159,15 +161,15 @@ export default async function LinkseitePage({searchParams}: Props) {
         </ul>
       </section>
 
-      <form action={addCustomLink} className="space-y-2 rounded-2xl bg-card p-4 ring-1 ring-line">
+      <form action={addCustomLink} className="space-y-2 rounded-3xl panel p-4">
         <h2 className="font-medium">{t('addTitle')}</h2>
         <input type="hidden" name="venueId" value={venue.id} />
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <input name="icon" maxLength={8} placeholder={t('iconLabel')} aria-label={t('iconLabel')} className={`w-16 ${FIELD}`} />
-          <input name="label" required maxLength={40} placeholder={t('labelLabel')} aria-label={t('labelLabel')} className={`flex-1 ${FIELD}`} />
+          <input name="label" required maxLength={40} placeholder={t('labelLabel')} aria-label={t('labelLabel')} className={`min-w-0 flex-1 ${FIELD}`} />
         </div>
         <input name="url" required maxLength={500} placeholder={t('urlPlaceholder')} aria-label={t('urlLabel')} className={`w-full ${FIELD}`} />
-        <button type="submit" className="rounded-xl bg-terra px-4 py-2 font-medium text-white">
+        <button type="submit" className="rounded-2xl flame-grad px-4 py-2 font-display text-sm font-bold tracking-tight text-void transition-transform active:scale-[0.98]">
           {t('addButton')}
         </button>
       </form>
@@ -177,7 +179,7 @@ export default async function LinkseitePage({searchParams}: Props) {
           href={`/f/${firstTable.code}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block text-sm text-muted underline"
+          className="inline-block text-sm text-ash underline"
         >
           {t('previewButton')}
         </a>

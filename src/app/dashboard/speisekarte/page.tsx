@@ -4,9 +4,7 @@ import {redirect} from 'next/navigation';
 import {createSupabaseServerClient} from '@/lib/supabase/server';
 import {getActiveVenue} from '@/lib/venues';
 import {addCategory, deleteCategory, moveCategory, renameCategory} from './actions';
-
-const FIELD = 'rounded-xl border border-line bg-card p-3';
-const ICON_BUTTON = 'rounded-lg border border-line px-2 py-1 text-xs';
+import {BTN_DANGER, BTN_GHOST, BTN_ICON, BTN_PRIMARY, FIELD, H1, HINT} from '@/lib/ui';
 
 export default async function SpeisekartePage() {
   const venue = await getActiveVenue();
@@ -39,18 +37,18 @@ export default async function SpeisekartePage() {
   return (
     <div className="mx-auto max-w-lg space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">{t('title')}</h1>
-        <p className="mt-1 text-sm text-muted">{t('intro')}</p>
+        <h1 className={H1}>{t('title')}</h1>
+        <p className={`mt-2 ${HINT}`}>{t('intro')}</p>
         {!venue.hubEnabled ? (
-          <p className="mt-1 text-xs text-muted">
+          <p className="mt-2 text-xs leading-relaxed text-ash-2">
             {hubHintBefore}
-            <Link href="/dashboard/linkseite" className="underline">Link-Seite</Link>
+            <Link href="/dashboard/linkseite" className="text-flame underline underline-offset-2">Link-Seite</Link>
             {hubHintAfter}
           </p>
         ) : null}
       </div>
 
-      <form action={addCategory} className="flex gap-2">
+      <form action={addCategory} className="flex flex-wrap gap-2">
         <input type="hidden" name="venueId" value={venue.id} />
         <input
           name="name"
@@ -58,23 +56,21 @@ export default async function SpeisekartePage() {
           maxLength={60}
           placeholder={t('addCategoryPlaceholder')}
           aria-label={t('addCategoryLabel')}
-          className={`flex-1 ${FIELD}`}
+          className={`min-w-0 flex-1 ${FIELD}`}
         />
-        <button type="submit" className="rounded-xl bg-terra px-4 py-2 font-medium text-white">
+        <button type="submit" className={`shrink-0 ${BTN_PRIMARY}`}>
           {t('addCategoryButton')}
         </button>
       </form>
 
       {rows.length === 0 ? (
-        <p className="rounded-2xl bg-card p-6 text-muted ring-1 ring-line">
-          {t('emptyCategories')}
-        </p>
+        <p className="rounded-3xl panel p-6 text-sm text-ash">{t('emptyCategories')}</p>
       ) : (
         <ul className="space-y-3">
           {rows.map((row, index) => (
-            <li key={row.id} className="rounded-2xl bg-card p-4 ring-1 ring-line">
+            <li key={row.id} className="rounded-3xl panel p-4">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs text-muted">
+                <span className="text-xs text-ash-2">
                   {t('itemCount', {count: row.menu_items.length})}
                 </span>
                 <div className="flex shrink-0 gap-1">
@@ -85,7 +81,7 @@ export default async function SpeisekartePage() {
                     <button
                       type="submit"
                       disabled={index === 0}
-                      className={`${ICON_BUTTON} disabled:opacity-30`}
+                      className={BTN_ICON}
                       aria-label={t('moveUp')}
                     >
                       ▲
@@ -98,7 +94,7 @@ export default async function SpeisekartePage() {
                     <button
                       type="submit"
                       disabled={index === rows.length - 1}
-                      className={`${ICON_BUTTON} disabled:opacity-30`}
+                      className={BTN_ICON}
                       aria-label={t('moveDown')}
                     >
                       ▼
@@ -109,7 +105,7 @@ export default async function SpeisekartePage() {
                     <button
                       type="submit"
                       title={t('deleteCategoryHint')}
-                      className={`${ICON_BUTTON} text-red-700`}
+                      className={BTN_DANGER}
                     >
                       {tc('delete')}
                     </button>
@@ -117,7 +113,7 @@ export default async function SpeisekartePage() {
                 </div>
               </div>
 
-              <form action={renameCategory} className="mt-3 flex gap-2">
+              <form action={renameCategory} className="mt-3 flex flex-wrap gap-2">
                 <input type="hidden" name="id" value={row.id} />
                 <input
                   name="name"
@@ -125,16 +121,16 @@ export default async function SpeisekartePage() {
                   required
                   maxLength={60}
                   aria-label={t('categoryNameLabel')}
-                  className={`flex-1 ${FIELD}`}
+                  className={`min-w-0 flex-1 ${FIELD}`}
                 />
-                <button type="submit" className="rounded-xl border border-line px-4 py-3 text-sm font-medium">
+                <button type="submit" className={`shrink-0 ${BTN_GHOST}`}>
                   {tc('save')}
                 </button>
               </form>
 
               <Link
                 href={`/dashboard/speisekarte/${row.id}`}
-                className="mt-3 inline-block text-sm text-terra underline"
+                className="mt-3.5 inline-flex items-center gap-1 text-sm font-semibold text-flame transition-colors hover:text-flame-lit"
               >
                 {t('editItems')} →
               </Link>

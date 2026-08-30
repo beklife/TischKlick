@@ -15,39 +15,39 @@ export async function GooglePlaceSearch({venueId, query, results, searchFailed, 
   const t = await getTranslations('onboarding');
   return (
     <div className="space-y-6">
-      <form action={searchAction} method="get" className="flex gap-2">
+      <form action={searchAction} method="get" className="flex flex-wrap gap-2">
         <input type="hidden" name="venue" value={venueId} />
         <input
           name="q"
           type="search"
           defaultValue={query}
           placeholder={t('searchPlaceholder')}
-          className="flex-1 rounded-xl border border-line bg-card p-3"
+          className="min-w-0 flex-1 rounded-2xl border border-hair bg-shell p-3 text-chalk placeholder:text-ash-2 transition-colors focus:border-flame/60 focus:outline-none"
         />
-        <button type="submit" className="rounded-xl bg-terra px-4 py-2 font-medium text-white">
+        <button type="submit" className="shrink-0 rounded-2xl flame-grad px-4 py-2 font-display text-sm font-bold tracking-tight text-void transition-transform active:scale-[0.98]">
           {t('searchButton')}
         </button>
       </form>
 
       {searchFailed ? (
-        <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{t('searchFailed')}</p>
+        <p className="rounded-2xl border border-berry/40 bg-berry/10 p-3 text-sm text-berry">{t('searchFailed')}</p>
       ) : null}
       {query && !searchFailed && results.length === 0 ? (
-        <p className="text-sm text-muted">{t('noResults')}</p>
+        <p className="text-sm text-ash">{t('noResults')}</p>
       ) : null}
 
       <ul className="space-y-2">
         {results.map((r) => (
-          <li key={r.placeId} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-card p-3">
+          <li key={r.placeId} className="flex items-center justify-between gap-3 rounded-2xl border border-hair bg-shell p-3 text-chalk placeholder:text-ash-2 transition-colors focus:border-flame/60 focus:outline-none">
             <div>
               <p className="font-medium">{r.name}</p>
-              <p className="text-sm text-muted">{r.address}</p>
+              <p className="text-sm text-ash">{r.address}</p>
             </div>
             <form action={selectPlace}>
               <input type="hidden" name="venueId" value={venueId} />
               <input type="hidden" name="placeId" value={r.placeId} />
               <input type="hidden" name="backPath" value={backPath} />
-              <button type="submit" className="rounded-lg bg-sage px-3 py-2 text-sm font-medium text-white">
+              <button type="submit" className="rounded-lg bg-zest px-3 py-2 text-sm font-bold text-void transition-opacity hover:opacity-90">
                 {t('selectButton')}
               </button>
             </form>
@@ -55,9 +55,9 @@ export async function GooglePlaceSearch({venueId, query, results, searchFailed, 
         ))}
       </ul>
 
-      <details className="rounded-xl border border-line bg-card p-3">
+      <details className="rounded-2xl border border-hair bg-shell p-3 text-chalk placeholder:text-ash-2 transition-colors focus:border-flame/60 focus:outline-none">
         <summary className="cursor-pointer text-sm font-medium">{t('manualTitle')}</summary>
-        <form action={saveManualUrl} className="mt-3 flex gap-2">
+        <form action={saveManualUrl} className="mt-3 flex flex-wrap gap-2">
           <input type="hidden" name="venueId" value={venueId} />
           <input type="hidden" name="backPath" value={backPath} />
           <input
@@ -66,9 +66,9 @@ export async function GooglePlaceSearch({venueId, query, results, searchFailed, 
             required
             placeholder="https://g.page/r/..."
             aria-label={t('manualLabel')}
-            className="flex-1 rounded-xl border border-line bg-card p-3 text-sm"
+            className="min-w-0 flex-1 rounded-2xl border border-hair bg-shell p-3 text-chalk placeholder:text-ash-2 transition-colors focus:border-flame/60 focus:outline-none text-sm"
           />
-          <button type="submit" className="rounded-xl border border-line px-3 py-2 text-sm font-medium">
+          <button type="submit" className="shrink-0 rounded-xl border border-hair bg-shell-2 px-3 py-2 text-sm font-semibold text-ash transition-colors hover:border-hair-2 hover:text-chalk">
             {t('manualButton')}
           </button>
         </form>

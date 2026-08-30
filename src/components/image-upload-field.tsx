@@ -66,7 +66,7 @@ export function ImageUploadField({name, id, label, hint, buttonLabel}: Props) {
 
   return (
     <div className="space-y-1">
-      <label htmlFor={id} className="text-xs text-muted">{label}</label>
+      <label htmlFor={id} className="text-xs text-ash">{label}</label>
       <input
         id={id}
         name={name}
@@ -74,13 +74,13 @@ export function ImageUploadField({name, id, label, hint, buttonLabel}: Props) {
         accept="image/png,image/jpeg"
         required
         onChange={handleChange}
-        className="w-full rounded-xl border border-line bg-card p-2 text-sm"
+        className="w-full rounded-xl border border-hair bg-shell p-2 text-chalk placeholder:text-ash-2 transition-colors focus:border-flame/60 focus:outline-none text-sm"
       />
-      <p className="text-xs text-muted">{hint}</p>
+      <p className="text-xs text-ash">{hint}</p>
       <button
         type="submit"
         disabled={busy}
-        className="rounded-xl border border-line px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="rounded-xl border border-hair px-4 py-2 text-sm font-medium disabled:opacity-50"
       >
         {buttonLabel}
       </button>

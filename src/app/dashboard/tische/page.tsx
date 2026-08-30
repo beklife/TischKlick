@@ -30,10 +30,10 @@ export default async function TischePage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold">{t('title')}</h1>
-      <p className="mt-2 text-sm text-muted">{t('qrHint')}</p>
+      <h1 className="display text-2xl">{t('title')}</h1>
+      <p className="mt-2 text-sm leading-relaxed text-ash">{t('qrHint')}</p>
 
-      <form action={addTable} className="mt-6 flex gap-2">
+      <form action={addTable} className="mt-7 flex flex-wrap gap-2">
         <input type="hidden" name="venueId" value={venue.id} />
         <input
           name="label"
@@ -41,31 +41,43 @@ export default async function TischePage() {
           maxLength={60}
           placeholder={t('addPlaceholder')}
           aria-label={t('addLabel')}
-          className="flex-1 rounded-xl border border-line bg-card p-3"
+          className="min-w-0 flex-1 rounded-2xl border border-hair bg-shell p-3 text-[0.9375rem] text-chalk placeholder:text-ash-2 transition-colors focus:border-flame/60 focus:outline-none"
         />
-        <button type="submit" className="rounded-xl bg-terra px-4 py-2 font-medium text-white">
+        <button
+          type="submit"
+          className="shrink-0 rounded-2xl flame-grad px-5 font-display text-sm font-bold tracking-tight text-void transition-transform active:scale-[0.98]"
+        >
           {t('addButton')}
         </button>
       </form>
 
       {rows.length === 0 ? (
-        <p className="mt-6 rounded-2xl bg-card p-6 text-muted ring-1 ring-line">{t('empty')}</p>
+        <p className="mt-7 rounded-3xl panel p-6 text-sm text-ash">{t('empty')}</p>
       ) : (
-        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+        <ul className="mt-7 grid gap-3 sm:grid-cols-2">
           {rows.map((row) => (
-            <li key={row.id} className="rounded-2xl bg-card p-4 ring-1 ring-line">
-              <div className="flex items-start justify-between">
-                <p className="font-medium">{row.label}</p>
+            <li key={row.id} className="rounded-3xl panel p-4">
+              <div className="flex items-start justify-between gap-3">
+                <p className="font-semibold tracking-tight">{row.label}</p>
                 <form action={deleteTable}>
                   <input type="hidden" name="id" value={row.id} />
-                  <button type="submit" className="text-xs text-red-700 underline">{tc('delete')}</button>
+                  <button
+                    type="submit"
+                    className="text-[0.6875rem] font-medium text-ash-2 transition-colors hover:text-berry"
+                  >
+                    {tc('delete')}
+                  </button>
                 </form>
               </div>
-              <div className="mt-3 flex items-center gap-4">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={row.qr} alt={t('qrAlt', {label: row.label})} className="h-24 w-24 rounded-lg" />
+              <div className="mt-3.5 flex items-center gap-3.5">
+                {/* The QR stays black-on-white on its own light plate: inverting it
+                    for the dark UI would cost scanner reliability. */}
+                <div className="shrink-0 rounded-xl bg-white p-1.5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={row.qr} alt={t('qrAlt', {label: row.label})} className="h-20 w-20" />
+                </div>
                 <div className="min-w-0">
-                  <p className="truncate font-mono text-xs text-muted">{row.url}</p>
+                  <p className="truncate font-mono text-[0.6875rem] text-ash">{row.url}</p>
                   <div className="mt-2">
                     <CopyButton text={row.url} label={t('copy')} copiedLabel={t('copied')} />
                   </div>

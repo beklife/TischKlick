@@ -15,14 +15,14 @@ export default async function OnboardingPage({searchParams}: Props) {
   if (!sp.venue) {
     return (
       <div className="mx-auto max-w-md">
-        <h1 className="text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="display text-[1.85rem]">{t('title')}</h1>
         <form action={createVenue} className="mt-6 space-y-4">
           <div>
             <label htmlFor="name" className="text-sm font-medium">{t('nameLabel')}</label>
             <input id="name" name="name" required maxLength={120} placeholder={t('namePlaceholder')}
-              className="mt-1 w-full rounded-xl border border-line bg-card p-3" />
+              className="mt-1 w-full rounded-2xl border border-hair bg-shell p-3 text-chalk placeholder:text-ash-2 transition-colors focus:border-flame/60 focus:outline-none" />
           </div>
-          <button type="submit" className="w-full rounded-2xl bg-terra px-6 py-3 font-semibold text-white">
+          <button type="submit" className="w-full rounded-2xl flame-grad flame-glow px-6 py-3.5 font-display font-bold tracking-tight text-void transition-transform active:scale-[0.98]">
             {t('createButton')}
           </button>
         </form>
@@ -54,8 +54,8 @@ export default async function OnboardingPage({searchParams}: Props) {
 
   return (
     <div className="mx-auto max-w-md">
-      <h1 className="text-2xl font-semibold">{t('googleTitle')}</h1>
-      <p className="mt-2 text-muted">{t('googleHint')}</p>
+      <h1 className="display text-[1.85rem]">{t('googleTitle')}</h1>
+      <p className="mt-2 text-ash">{t('googleHint')}</p>
       <div className="mt-6">
         <GooglePlaceSearch
           venueId={venue.id}
@@ -67,8 +67,8 @@ export default async function OnboardingPage({searchParams}: Props) {
         />
       </div>
       {reviewUrl ? (
-        <div className="mt-6 rounded-xl border border-sage bg-card p-4">
-          <p className="font-medium text-sage">✓ {t('connected')}</p>
+        <div className="mt-6 rounded-2xl border border-zest/40 bg-zest/[0.07] p-4">
+          <p className="font-medium text-zest">✓ {t('connected')}</p>
           <a href={reviewUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-sm underline">
             {t('testLink')}
           </a>

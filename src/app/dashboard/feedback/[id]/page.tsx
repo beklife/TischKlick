@@ -27,37 +27,37 @@ export default async function FeedbackDetailPage({params}: {params: Promise<{id:
 
   return (
     <div className="mx-auto max-w-lg">
-      <Link href="/dashboard" className="text-sm text-muted underline">← {tc('back')}</Link>
-      <div className="mt-4 rounded-2xl bg-card p-6 ring-1 ring-line">
+      <Link href="/dashboard" className="text-sm text-ash underline">← {tc('back')}</Link>
+      <div className="mt-4 rounded-3xl panel p-6">
         <div className="flex items-center justify-between">
-          <span className="text-xl text-terra" aria-label={tg('starLabel', {count: fb.rating})}>
+          <span className="text-xl text-flame" aria-label={tg('starLabel', {count: fb.rating})}>
             <span aria-hidden="true">
               {'★'.repeat(fb.rating)}
               <span className="text-line">{'★'.repeat(5 - fb.rating)}</span>
             </span>
           </span>
-          <span className="text-sm text-muted">
+          <span className="text-sm text-ash">
             {table ? `${t('table')} ${table.label} · ` : ''}
             {format.dateTime(new Date(fb.created_at), {dateStyle: 'full', timeStyle: 'short'})}
           </span>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
           {(fb.categories as string[]).map((c) => (
-            <span key={c} className="rounded-full bg-cream px-3 py-1 text-sm">{tg(`categories.${c}`)}</span>
+            <span key={c} className="rounded-full border border-hair bg-shell-2 px-3 py-1 text-sm text-ash">{tg(`categories.${c}`)}</span>
           ))}
         </div>
         <p className="mt-4 whitespace-pre-wrap">{fb.comment ?? t('noComment')}</p>
-        <div className="mt-6 border-t border-line pt-4 text-sm">
+        <div className="mt-6 border-t border-hair pt-4 text-sm">
           {fb.contact ? (
             <div className="flex items-center justify-between gap-3">
               <span>{fb.contact}</span>
               <form action={deleteContact}>
                 <input type="hidden" name="id" value={fb.id} />
-                <button type="submit" className="text-red-700 underline">{t('deleteContact')}</button>
+                <button type="submit" className="text-berry underline">{t('deleteContact')}</button>
               </form>
             </div>
           ) : (
-            <span className="text-muted">{t('anonymous')}</span>
+            <span className="text-ash">{t('anonymous')}</span>
           )}
         </div>
       </div>
